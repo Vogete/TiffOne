@@ -6,13 +6,16 @@
     "author": "Zoltan Fraknoi",
     "content_scripts": [
         {
-          "matches": [
-            "<all_urls>"
-          ],
-          "js": [
-              "tiff.min.js",
-              "content.js"
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "tiff.min.js",
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
             ]
         }
-      ]
-  }
+    ]
+}
