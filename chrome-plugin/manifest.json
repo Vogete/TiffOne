@@ -1,0 +1,18 @@
+{
+    "manifest_version": 2,
+    "name": "AX Tiff Viewer",
+    "version": "0.1",
+    "description": "A plugin to view TIFF files from Microsoft Dynamics AX",
+    "author": "Zoltan Fraknoi",
+    "content_scripts": [
+        {
+          "matches": [
+            "<all_urls>"
+          ],
+          "js": [
+              "tiff.min.js",
+              "content.js"
+            ]
+        }
+      ]
+  }
