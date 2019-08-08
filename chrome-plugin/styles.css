@@ -1,14 +1,26 @@
-.tiff-canvas {
-    width: 100%;
-    height: 100%;
-}
-
 .tiff-canvas-wrapper {
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background-color: red;
+    height: 100%;
+    max-height: 95vh;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
 }
 
 .tiff-canvas-wrapper .menu-bar {
-    background-color: #fafafa;
+    background-color: blue;
     width: 100%;
-    height: 2em;
+    height: 2.5em;
+}
+
+
+.tiff-canvas {
+    max-width: 100%;
+    max-height: calc(100% - 2.5em);
+    height: auto;
+    width: auto;
+
 }

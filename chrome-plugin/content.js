@@ -1,22 +1,21 @@
-
-async function tiffToCanvas(location) {
-    let response = await getTiff(location);
-
-    var tiff = new Tiff({ buffer: response });
-    var canvas = tiff.toCanvas();
+async function tiffToCanvas(tiff, page = 0) {
+    tiff.setDirectory(page);
+    let canvas = tiff.toCanvas();
+    canvas.setAttribute("class", "tiff-canvas");
 
     return canvas;
 }
 
 function getTiff(url) {
     return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.responseType = 'arraybuffer';
 
         xhr.open("GET", url);
 
         xhr.onload = function (e) {
-            resolve(xhr.response);
+            let tiff = new Tiff({ buffer: xhr.response });
+            resolve(tiff);
         };
         xhr.onerror = function () {
             reject({
@@ -29,47 +28,62 @@ function getTiff(url) {
 }
 
 function displayTiffCanvas(domObj) {
-    var wrapper = document.createElement("div");
+    test = document.createElement("div");
+
+    let wrapper = document.createElement("div");
     wrapper.setAttribute("class", "tiff-canvas-wrapper");
 
-    var menuBar = document.createElement("div")
+    let menuBar = document.createElement("div");
     menuBar.setAttribute("class", "menu-bar");
-    wrapper.appendChild(menuBar)
 
+    let menuBarUrl = chrome.runtime.getURL("templates/menubar.html");
+    console.log(menuBarUrl);
+
+    // loadLocalFile(menuBarUrl).then(function(response){
+    //     test = document.getElementById(menuBar.id);
+
+    //     test.innerHTML = response;
+    //     console.log(response);
+    //     console.log("tests");
+    // });
+
+    wrapper.appendChild(menuBar);
     tifCanvas = domObj.tifCanvas;
-
     wrapper.appendChild(tifCanvas);
-    domObj.embedObj.parentNode.parentNode.replaceChild(wrapper, domObj.embedObj.parentNode);
+
+    test.appendChild(wrapper);
+
+    domObj.embedObj.parentNode.parentNode.replaceChild(test, domObj.embedObj.parentNode);
 }
 
-async function getTiffCanvases(domElements) {
-    var tiffCanvases = []
+function filterDomElementsByType(elements, type) {
+    let filteredElements = [];
 
-    for (let i = 0; i < domElements.length; i++) {
-        var embedElement = domElements[i];
+    for (let i = 0; i < elements.length; i++) {
+        let element = elements[i];
 
-        var isAlternatiffContent = embedElement.type == "application/x-alternatiff";
-        if (isAlternatiffContent) {
-
-            var canvas = await tiffToCanvas(embedElement.src);
-
-            canvas.setAttribute("class", "tiff-canvas");
-            // canvas = setDomElementSize(canvas, dimensions.width + "px", "auto")
-            // canvas = setDomElementSize(canvas, "100%", "100%")
-
-            // canvas.setAttribute('style', 'width:' + (dimensions.width) +
-            // 'px;');
-
-            domObj = {
-                tifCanvas: canvas,
-                embedObj: embedElement
-            }
-            tiffCanvases.push(domObj);
+        let isSpecifiedType = element.type == type;
+        if (isSpecifiedType) {
+            filteredElements.push(element);
         }
+
     }
 
-    return tiffCanvases;
+    return filteredElements;
 }
+
+async function getTiffCanvas(domElement, page = 0) {
+    let tiff = await getTiff(domElement.src);
+    let canvas = await tiffToCanvas(tiff, page);
+
+    let domObj = {
+        tifCanvas: canvas,
+        embedObj: domElement
+    };
+
+    return domObj;
+}
+
 
 function setDomElementSize(element, width, height) {
     element.setAttribute('style', 'width:' + (width) + '; height: ' + (height));
@@ -77,23 +91,33 @@ function setDomElementSize(element, width, height) {
 }
 
 
-function clearDOM() {
-    document.body.innerHTML = "";
+function loadLocalFile(url) {
+    return fetch(url)
+        .then((response) => {resolve(response);});
+
+    // return new Promise(function (resolve) {
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("GET", url);
+
+    //     xhr.onreadystatechange = function (e) {
+    //         resolve(xhr.response);
+    //     };
+
+    //     // xhr.send(null);
+    // });
 }
 
-async function displayCanvases(embedDomElements) {
-    tiffCanvases = await getTiffCanvases(embedDomElements);
+async function displayCanvases(elements) {
 
-    // clearDOM();
-
-    for (let i = 0; i < tiffCanvases.length; i++) {
-        tiffCanvas = tiffCanvases[i];
-        var domObj = tiffCanvas;
+    for (let i = 0; i < elements.length; i++) {
+        let element = elements[i];
+        let domObj = await getTiffCanvas(element);
         displayTiffCanvas(domObj);
     }
 
 }
 
 
-var embedDomElements = document.getElementsByTagName("embed");
-displayCanvases(embedDomElements);
+let embedDomElements = document.getElementsByTagName("embed");
+let alternatiffElements = filterDomElementsByType(embedDomElements, "application/x-alternatiff");
+displayCanvases(alternatiffElements);
