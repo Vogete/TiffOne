@@ -1,5 +1,9 @@
-async function tiffToCanvas(tiff, page = 0) {
-    tiff.setDirectory(page);
+var tiffFile;
+var currentPage = 1;
+
+async function tiffToCanvas(tiff, page = 1) {
+    var tiffFile = tiff;
+    tiff.setDirectory(page - 1);
 
     let canvas = tiff.toCanvas();
     canvas.setAttribute("class", "tiff-canvas");
@@ -29,63 +33,44 @@ function getTiff(url) {
 }
 
 async function displayTiffCanvas(tifCanvas, targetElement) {
-    // test = document.createElement("div");
-
-    let tiffViewerWrapper = document.createElement("div");
-    tiffViewerWrapper.setAttribute("class", "tiff-viewer");
+    let tiffViewerWrapper = await loadHtmlTemplate("templates/tiffInterface.html");
 
     let canvasWrapper = document.createElement("div");
     canvasWrapper.setAttribute("class", "canvas-wrapper");
-    canvasWrapper = setDomElementSize(canvasWrapper, targetElement.width + "px", `${targetElement.height-30}px`);
-
-    let menuBar = document.createElement("div");
-    menuBar.setAttribute("class", "menu-bar");
-
-    let buttonsWrapper = setupMenuBar();
-    menuBar.innerHTML = buttonsWrapper;
-
-    let menuBarUrl = chrome.runtime.getURL("templates/menubar.html");
-    console.log(menuBarUrl);
-    // test = await fetch(menuBarUrl);
-
-    // var xhr = new XMLHttpRequest();
-    // xhr.open("GET", menuBarUrl, true);
-    // xhr.send();
-
-
-    // loadLocalFile(menuBarUrl).then(function(response){
-    //     test = document.getElementById(menuBar.id);
-
-    //     test.innerHTML = response;
-    //     console.log(response);
-    //     console.log("tests");
-    // });
-
-    tiffViewerWrapper.appendChild(menuBar);
+    canvasWrapper = setDomElementSize(canvasWrapper, `${targetElement.width}px`, `${targetElement.height-40}px`);
     canvasWrapper.appendChild(tifCanvas);
 
     tiffViewerWrapper.appendChild(canvasWrapper);
-    // test.appendChild(wrapper);
 
     targetElement.parentNode.replaceChild(tiffViewerWrapper, targetElement);
 }
 
-function setupMenuBar() {
-    menubar = `
-    <div class="button-wrapper">
-        <button>
-            <i class="fas fa-print"></i>
-        </button>
-        <button>
-            <i class="fas fa-arrow-left"></i>
-        </button>
-        <input name="current-page" class="tiff-page-indicator" value="1">
-        <button>
-            <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-    `;
-    return menubar;
+async function loadHtmlTemplate(location) {
+    let url = chrome.runtime.getURL(location);
+    let templateString = await ajaxCall(url, "GET");
+    let parser = new DOMParser();
+    let htmlDoc = parser.parseFromString(templateString, 'text/html');
+    return htmlDoc.body.firstChild;
+}
+
+function ajaxCall(url, type = "GET") {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        // xhr.responseType = 'arraybuffer';
+
+        xhr.open(type, url);
+
+        xhr.onload = function (e) {
+            resolve(xhr.response);
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
 }
 
 function filterDomElementsByType(elements, type) {
@@ -149,7 +134,27 @@ async function displayCanvases(elements) {
 
 }
 
+function setEventListeners() {
+    let tiffViewers = document.getElementsByClassName("tiff-viewer");
+
+}
+
+
+function changePage(element, page) {
+    let canvas = tiffToCanvas(tiffFile, page);
+    displayTiffCanvas(canvas, element);
+    currentPage = page;
+}
+
+function nextPage(element) {
+    changePage(element, currentPage + 1);
+}
 
 let embedDomElements = document.getElementsByTagName("embed");
 let alternatiffElements = filterDomElementsByType(embedDomElements, "application/x-alternatiff");
 displayCanvases(alternatiffElements);
+
+
+chrome.runtime.onMessage.addListener((msg, sender, response) => {
+    console.log(msg);
+});
