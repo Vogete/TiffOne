@@ -4,6 +4,9 @@
     "version": "0.1",
     "description": "A plugin to view TIFF files from Microsoft Dynamics AX",
     "author": "Zoltan Fraknoi",
+    "permissions": [
+        "activeTab"
+    ],
     "content_scripts": [
         {
             "matches": [
@@ -11,14 +14,16 @@
             ],
             "js": [
                 "tiff.min.js",
-                "content.js"
+                "jquery-3.4.1.min.js",
+                "content.js",
+                "fa.all.min.js"
             ],
             "css": [
                 "styles.css"
             ],
             "web_accessible_resources": [
                 "templates/*"
-              ]
+            ]
         }
     ]
 }

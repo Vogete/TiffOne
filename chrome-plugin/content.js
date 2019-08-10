@@ -1,5 +1,6 @@
 async function tiffToCanvas(tiff, page = 0) {
     tiff.setDirectory(page);
+
     let canvas = tiff.toCanvas();
     canvas.setAttribute("class", "tiff-canvas");
 
@@ -27,17 +28,30 @@ function getTiff(url) {
     });
 }
 
-function displayTiffCanvas(domObj) {
-    test = document.createElement("div");
+async function displayTiffCanvas(tifCanvas, targetElement) {
+    // test = document.createElement("div");
 
-    let wrapper = document.createElement("div");
-    wrapper.setAttribute("class", "tiff-canvas-wrapper");
+    let tiffViewerWrapper = document.createElement("div");
+    tiffViewerWrapper.setAttribute("class", "tiff-viewer");
+
+    let canvasWrapper = document.createElement("div");
+    canvasWrapper.setAttribute("class", "canvas-wrapper");
+    canvasWrapper = setDomElementSize(canvasWrapper, targetElement.width + "px", `${targetElement.height-30}px`);
 
     let menuBar = document.createElement("div");
     menuBar.setAttribute("class", "menu-bar");
 
+    let buttonsWrapper = setupMenuBar();
+    menuBar.innerHTML = buttonsWrapper;
+
     let menuBarUrl = chrome.runtime.getURL("templates/menubar.html");
     console.log(menuBarUrl);
+    // test = await fetch(menuBarUrl);
+
+    // var xhr = new XMLHttpRequest();
+    // xhr.open("GET", menuBarUrl, true);
+    // xhr.send();
+
 
     // loadLocalFile(menuBarUrl).then(function(response){
     //     test = document.getElementById(menuBar.id);
@@ -47,13 +61,31 @@ function displayTiffCanvas(domObj) {
     //     console.log("tests");
     // });
 
-    wrapper.appendChild(menuBar);
-    tifCanvas = domObj.tifCanvas;
-    wrapper.appendChild(tifCanvas);
+    tiffViewerWrapper.appendChild(menuBar);
+    canvasWrapper.appendChild(tifCanvas);
 
-    test.appendChild(wrapper);
+    tiffViewerWrapper.appendChild(canvasWrapper);
+    // test.appendChild(wrapper);
 
-    domObj.embedObj.parentNode.parentNode.replaceChild(test, domObj.embedObj.parentNode);
+    targetElement.parentNode.replaceChild(tiffViewerWrapper, targetElement);
+}
+
+function setupMenuBar() {
+    menubar = `
+    <div class="button-wrapper">
+        <button>
+            <i class="fas fa-print"></i>
+        </button>
+        <button>
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <input name="current-page" class="tiff-page-indicator" value="1">
+        <button>
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+    `;
+    return menubar;
 }
 
 function filterDomElementsByType(elements, type) {
@@ -112,7 +144,7 @@ async function displayCanvases(elements) {
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
         let domObj = await getTiffCanvas(element);
-        displayTiffCanvas(domObj);
+        displayTiffCanvas(domObj.tifCanvas, domObj.embedObj.parentNode);
     }
 
 }
