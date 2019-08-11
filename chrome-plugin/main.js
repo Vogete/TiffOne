@@ -1,13 +1,19 @@
-var tiffFile;
-var currentPage = 1;
+async function tiffToCanvas(tiff, location, page = 1) {
+    let tiffFile = tiff;
 
-async function tiffToCanvas(tiff, page = 1) {
-    var tiffFile = tiff;
+    let pageCount = tiff.countDirectory();
+    if (page > pageCount) {
+        page = pageCount;
+    } else if (page < 1) {
+        page = 1;
+    }
+
     tiff.setDirectory(page - 1);
 
     let canvas = tiff.toCanvas();
     canvas.setAttribute("class", "tiff-canvas");
-
+    canvas.setAttribute("location", location);
+    canvas.setAttribute("page", page);
     return canvas;
 }
 
@@ -42,8 +48,15 @@ async function displayTiffCanvas(tifCanvas, targetElement) {
 
     tiffViewerWrapper.appendChild(canvasWrapper);
 
+    let tiffMenuBarButtons = tiffViewerWrapper.getElementsByTagName("button");
+    for (let i = 0; i < tiffMenuBarButtons.length; i++) {
+        let element = tiffMenuBarButtons[i];
+        element.addEventListener("click", buttonClickListener);
+    }
+
     targetElement.parentNode.replaceChild(tiffViewerWrapper, targetElement);
 }
+
 
 async function loadHtmlTemplate(location) {
     let url = chrome.runtime.getURL(location);
@@ -89,9 +102,9 @@ function filterDomElementsByType(elements, type) {
     return filteredElements;
 }
 
-async function getTiffCanvas(domElement, page = 0) {
-    let tiff = await getTiff(domElement.src);
-    let canvas = await tiffToCanvas(tiff, page);
+async function getTiffCanvas(domElement, tiffSrc, page = 1) {
+    let tiff = await getTiff(tiffSrc);
+    let canvas = await tiffToCanvas(tiff, tiffSrc, page);
 
     let domObj = {
         tifCanvas: canvas,
@@ -101,60 +114,75 @@ async function getTiffCanvas(domElement, page = 0) {
     return domObj;
 }
 
-
 function setDomElementSize(element, width, height) {
     element.setAttribute('style', 'width:' + (width) + '; height: ' + (height));
     return element;
-}
-
-
-function loadLocalFile(url) {
-    return fetch(url)
-        .then((response) => {resolve(response);});
-
-    // return new Promise(function (resolve) {
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open("GET", url);
-
-    //     xhr.onreadystatechange = function (e) {
-    //         resolve(xhr.response);
-    //     };
-
-    //     // xhr.send(null);
-    // });
 }
 
 async function displayCanvases(elements) {
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
-        let domObj = await getTiffCanvas(element);
+        let domObj = await getTiffCanvas(element, element.src, 1);
         displayTiffCanvas(domObj.tifCanvas, domObj.embedObj.parentNode);
     }
 
 }
 
-function setEventListeners() {
-    let tiffViewers = document.getElementsByClassName("tiff-viewer");
+async function changePage(element, page) {
+    let rootElement = getTiffViewerRootElement(element);
+    let src = element.attributes["location"].value;
+    let domObj = await getTiffCanvas(element, src, page);
+    // console.log(domObj);
+    element.parentNode.replaceChild(domObj.tifCanvas, element);
+    currentPage = domObj.tifCanvas.attributes["page"].value;
+
+    rootElement.getElementsByClassName("tiff-page-indicator")[0].value = domObj.tifCanvas.attributes["page"].value;
 
 }
 
-
-function changePage(element, page) {
-    let canvas = tiffToCanvas(tiffFile, page);
-    displayTiffCanvas(canvas, element);
-    currentPage = page;
+async function nextPage(canvas) {
+    let currentPage = parseInt(canvas.attributes["page"].value);
+    await changePage(canvas, currentPage + 1);
 }
 
-function nextPage(element) {
-    changePage(element, currentPage + 1);
+async function previousPage(canvas) {
+    let currentPage = parseInt(canvas.attributes["page"].value);
+    await changePage(canvas, currentPage + -1);
 }
+
+function getTiffViewerRootElement(child) {
+    return child.closest(".tiff-viewer");
+}
+
+function buttonClickListener(event) {
+    let button = event.srcElement;
+    let canvas = getTiffViewerRootElement(button).getElementsByClassName("tiff-canvas")[0];
+    // let canvas = button.closest(".tiff-viewer").getElementsByClassName("tiff-canvas")[0];
+
+    switch (button.name) {
+        case "tiffPageChange":
+            switch (button.value) {
+                case "nextPage":
+                    nextPage(canvas);
+                    break;
+                case "previousPage":
+                    previousPage(canvas);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case "tiffPrint":
+            console.log("print");
+            break;
+        default:
+            break;
+    }
+}
+
+
 
 let embedDomElements = document.getElementsByTagName("embed");
 let alternatiffElements = filterDomElementsByType(embedDomElements, "application/x-alternatiff");
 displayCanvases(alternatiffElements);
-
-
-chrome.runtime.onMessage.addListener((msg, sender, response) => {
-    console.log(msg);
-});

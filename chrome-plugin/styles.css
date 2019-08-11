@@ -59,10 +59,14 @@
     cursor: pointer;
 }
 
+
 .tiff-viewer .menu-bar .button-wrapper button:hover {
     color: white;
     background-color: red;
+}
 
+.tiff-viewer .menu-bar .button-wrapper button > * {
+    pointer-events: none;
 }
 
 .tiff-viewer .menu-bar .button-wrapper .tiff-page-indicator {
@@ -72,6 +76,7 @@
 
     text-align: center;
 
+    color: black;
     background-color: #fff;
 
     border: 1px solid red;
