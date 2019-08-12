@@ -38,7 +38,7 @@ function getTiff(url) {
     });
 }
 
-async function displayTiffCanvas(tifCanvas, targetElement) {
+async function displayTiffViewer(tifCanvas, targetElement) {
     let tiffViewerWrapper = await loadHtmlTemplate("templates/tiffInterface.html");
 
     let canvasWrapper = document.createElement("div");
@@ -124,7 +124,7 @@ async function displayCanvases(elements) {
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
         let domObj = await getTiffCanvas(element, element.src, 1);
-        displayTiffCanvas(domObj.tifCanvas, domObj.embedObj.parentNode);
+        displayTiffViewer(domObj.tifCanvas, domObj.embedObj.parentNode);
     }
 
 }
@@ -181,6 +181,13 @@ function buttonClickListener(event) {
     }
 }
 
+function printCanvas(canvas) {
+
+}
+
+function printTiff(tiffFile) {
+
+}
 
 
 let embedDomElements = document.getElementsByTagName("embed");
