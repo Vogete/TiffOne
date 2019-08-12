@@ -41,6 +41,13 @@ function getTiff(url) {
 async function displayTiffViewer(tifCanvas, targetElement) {
     let tiffViewerWrapper = await loadHtmlTemplate("templates/tiffInterface.html");
 
+    // var script = document.createElement('script');
+    // await script.onload;
+    // script.src = chrome.runtime.getURL("libs/fa.all.min.js");
+    // tiffViewerWrapper.insertBefore(script, tiffViewerWrapper.firstChild);
+    // console.log("yeey");
+
+
     let canvasWrapper = document.createElement("div");
     canvasWrapper.setAttribute("class", "canvas-wrapper");
     canvasWrapper = setDomElementSize(canvasWrapper, `${targetElement.width}px`, `${targetElement.height-40}px`);
@@ -124,7 +131,7 @@ async function displayCanvases(elements) {
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
         let domObj = await getTiffCanvas(element, element.src, 1);
-        displayTiffViewer(domObj.tifCanvas, domObj.embedObj.parentNode);
+        displayTiffViewer(domObj.tifCanvas, element.parentNode);
     }
 
 }

@@ -8,7 +8,8 @@
         "activeTab"
     ],
     "web_accessible_resources": [
-        "templates/*"
+        "templates/*",
+        "fonts/*"
     ],
     "content_scripts": [
         {
@@ -17,12 +18,12 @@
             ],
             "js": [
                 "libs/tiff.min.js",
-                "libs/fa.all.min.js",
                 "libs/jquery-3.4.1.min.js",
                 "main.js"
             ],
             "css": [
-                "styles.css"
+                "css/styles.css",
+                "css/font-awesome.min.css"
             ]
         }
     ]
