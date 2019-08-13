@@ -20,7 +20,8 @@ function getTiff(url) {
 }
 
 async function tiffToCanvas(tiff, location, page = 1) {
-    // let tiffFile = tiff;
+    // Needed because of how the library handles page count
+    tiff.setDirectory(0);
 
     let pageCount = tiff.countDirectory();
     if (page > pageCount) {
@@ -35,11 +36,14 @@ async function tiffToCanvas(tiff, location, page = 1) {
     canvas.setAttribute("class", "tiff-canvas");
     canvas.setAttribute("location", location);
     canvas.setAttribute("page", page);
+    canvas.setAttribute("totalPages", pageCount);
     return canvas;
 }
 
 async function getTiffCanvas(tiffSrc, page = 1) {
     let tiff = await getTiff(tiffSrc);
+    tiffCollection[tiffSrc] = tiff;
+
     let canvas = await tiffToCanvas(tiff, tiffSrc, page);
     return canvas;
 }

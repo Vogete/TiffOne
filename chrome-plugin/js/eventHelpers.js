@@ -24,6 +24,12 @@ function buttonClickListener(event) {
     }
 }
 
+function pageIndicatorChangeListener(event) {
+    let pageIndicator = event.srcElement
+    let canvas = getTiffViewerRootElement(pageIndicator).getElementsByClassName("tiff-canvas")[0];
+    changePage(canvas, pageIndicator.value);
+}
+
 
 function printButtonListener(button) {
     let canvas = getTiffViewerRootElement(button).getElementsByClassName("tiff-canvas")[0];

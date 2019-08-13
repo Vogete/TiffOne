@@ -71,7 +71,8 @@
 }
 
 .tiff-viewer .menu-bar .button-wrapper .tiff-page-indicator {
-    width: 2.5em;
+    width: auto;
+    min-width: 2.5em;
     height: 100%;
     margin: 0 0.05em;
 

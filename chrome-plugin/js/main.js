@@ -1,24 +1,6 @@
-// async function displayTiffViewer(tifCanvas, targetElement) {
-//     let tiffViewerWrapper = await loadHtmlTemplate("templates/tiffInterface.html");
-
-//     let canvasWrapper = document.createElement("div");
-//     canvasWrapper.setAttribute("class", "canvas-wrapper");
-//     canvasWrapper = setDomElementSize(canvasWrapper, `${targetElement.width}px`, `${targetElement.height-40}px`);
-//     canvasWrapper.appendChild(tifCanvas);
-
-//     tiffViewerWrapper.appendChild(canvasWrapper);
-
-//     let tiffMenuBarButtons = tiffViewerWrapper.getElementsByTagName("button");
-//     for (let i = 0; i < tiffMenuBarButtons.length; i++) {
-//         let element = tiffMenuBarButtons[i];
-//         element.addEventListener("click", buttonClickListener);
-//     }
-
-//     targetElement.parentNode.replaceChild(tiffViewerWrapper, targetElement);
-// }
+let tiffCollection = {};
 
 function displayAlternatiffContent(tiffViewer, targetElement) {
-    console.log(targetElement.height);
 
     tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.height = `${targetElement.height}`;
     tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.width = `${targetElement.width}`;
@@ -41,6 +23,10 @@ async function generateTiffViewer(tifCanvas) {
         let element = tiffMenuBarButtons[i];
         element.addEventListener("click", buttonClickListener);
     }
+
+    let pageIndicator = tiffViewerWrapper.getElementsByTagName("select")[0];
+    pageIndicator.addEventListener("change", pageIndicatorChangeListener)
+
 
     return tiffViewerWrapper;
 }
@@ -73,26 +59,31 @@ function ajaxCall(url, type = "GET") {
     });
 }
 
-
 async function displayCanvases(elements) {
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
-        let tifCanvas = await getTiffCanvas(element.src, 1);
+
+        // let tifCanvas = await getTiffCanvas(element.src, 1);
+        let tiff = await getTiff(element.src);
+        tiffCollection[element.src] = tiff;
+        let tifCanvas = await tiffToCanvas(tiff, element.src, 1);
+
         let tiffViewerWrapper = await generateTiffViewer(tifCanvas);
         displayAlternatiffContent(tiffViewerWrapper, element.parentNode);
-        // displayTiffViewer(tifCanvas, element.parentNode);
+        setupPageIndicator(1, tiff.countDirectory(), tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0]);
     }
 
 }
 
-async function changePage(element, page) {
-    let rootElement = getTiffViewerRootElement(element);
-    let src = element.attributes["location"].value;
-    let tifCanvas = await getTiffCanvas(src, page);
-    // console.log(domObj);
-    element.parentNode.replaceChild(tifCanvas, element);
+async function changePage(canvas, page) {
+    let rootElement = getTiffViewerRootElement(canvas);
+    let src = canvas.attributes["location"].value;
 
+    tiff = tiffCollection[src];
+
+    let tifCanvas = await tiffToCanvas(tiff, src, page);
+    canvas.parentNode.replaceChild(tifCanvas, canvas);
     let currentPage = tifCanvas.attributes["page"].value;
     rootElement.getElementsByClassName("tiff-page-indicator")[0].value = currentPage;
 }
