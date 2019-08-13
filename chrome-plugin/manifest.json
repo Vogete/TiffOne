@@ -10,7 +10,8 @@
     ],
     "web_accessible_resources": [
         "templates/*",
-        "fonts/*"
+        "fonts/*",
+        "css/printing.css"
     ],
     "content_scripts": [
         {

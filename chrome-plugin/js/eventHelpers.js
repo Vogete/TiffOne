@@ -17,10 +17,17 @@ function buttonClickListener(event) {
             }
             break;
         case "tiffPrint":
-
-            console.log("print");
+            printButtonListener(button);
             break;
         default:
             break;
     }
+}
+
+
+function printButtonListener(button) {
+    let canvas = getTiffViewerRootElement(button).getElementsByClassName("tiff-canvas")[0];
+    let newCanvas = cloneCanvas(canvas);
+    // let img = newCanvas.toDataURL("image/png");
+    printContent(newCanvas);
 }

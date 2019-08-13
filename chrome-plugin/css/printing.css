@@ -1,0 +1,21 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+
+@media print {
+    @page
+    {
+        /* size: auto;*/   /* auto is the current printer page size */
+        margin: 0mm;  /* this affects the margin in the printer settings */
+    }
+}
+
+.tiff-print-canvas {
+    max-width: 100%;
+    background-color: white;
+}
+
+.tiff-print-canvas canvas {
+    width: 100%;
+}

@@ -18,8 +18,10 @@
 // }
 
 function displayAlternatiffContent(tiffViewer, targetElement) {
-    console.log(targetElement.height)
-    tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.height = `${targetElement.height-40}px`;
+    console.log(targetElement.height);
+
+    tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.height = `${targetElement.height}`;
+    tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.width = `${targetElement.width}`;
 
     targetElement.parentNode.replaceChild(tiffViewer, targetElement);
 }
@@ -105,12 +107,42 @@ async function previousPage(canvas) {
     await changePage(canvas, currentPage + -1);
 }
 
-function getTiffViewerRootElement(child) {
-    return child.closest(".tiff-viewer");
+async function printContent(element) {
+    let printPage = await loadHtmlTemplate("templates/printTemplate.html");
+    printPage.appendChild(element);
+
+    let cssLink = document.createElement('link');
+    cssLink.rel = "stylesheet";
+    cssLink.type = "text/css";
+    cssLink.href = chrome.runtime.getURL("css/printing.css");
+
+    let win1 = window.open();
+
+    win1.document.head.appendChild(cssLink);
+    win1.document.body.appendChild(printPage);
+
+    win1.document.close();
+    win1.focus();
+
+    // Need to wait a bit so that CSS can be applied. #KindOfAHackButItWorks
+    await setTimeout(
+        function(){
+            win1.print();
+            win1.close();
+        },
+    500);
 }
 
-function printContent(element) {
-    // TODO
+function cloneCanvas(canvas) {
+    let newCanvas = document.createElement('canvas');
+    let context = newCanvas.getContext('2d');
+
+    newCanvas.width = canvas.width;
+    newCanvas.height = canvas.height;
+
+    context.drawImage(canvas, 0, 0);
+
+    return newCanvas;
 }
 
 
