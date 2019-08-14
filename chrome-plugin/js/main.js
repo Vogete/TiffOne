@@ -155,6 +155,7 @@ function cloneCanvas(canvas) {
 
 
 async function printTiffFile(tiffFile) {
+    tiffFile.setDirectory(0);
     let totalPages = tiffFile.countDirectory();
     let wrapper = document.createElement("div");
 
