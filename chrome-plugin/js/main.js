@@ -1,6 +1,6 @@
 let tiffCollection = {};
 
-function displayAlternatiffContent(tiffViewer, targetElement) {
+function displayContent(tiffViewer, targetElement) {
 
     tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.height = `${targetElement.height}`;
     tiffViewer.getElementsByClassName("canvas-wrapper")[0].style.width = `${targetElement.width}`;
@@ -26,7 +26,7 @@ async function generateTiffViewer(tifCanvas) {
 
     let pageIndicator = tiffViewerWrapper.getElementsByTagName("select")[0];
     pageIndicator.addEventListener("change", pageIndicatorChangeListener)
-
+    setupPageIndicator(1, tifCanvas.attributes["totalPages"].value, pageIndicator);
 
     return tiffViewerWrapper;
 }
@@ -59,7 +59,7 @@ function ajaxCall(url, type = "GET") {
     });
 }
 
-async function displayCanvases(elements) {
+async function displayAlternatiffCanvases(elements) {
 
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
@@ -70,11 +70,28 @@ async function displayCanvases(elements) {
         let tifCanvas = await tiffToCanvas(tiff, element.src, 1);
 
         let tiffViewerWrapper = await generateTiffViewer(tifCanvas);
-        displayAlternatiffContent(tiffViewerWrapper, element.parentNode);
-        setupPageIndicator(1, tiff.countDirectory(), tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0]);
+        displayContent(tiffViewerWrapper, element.parentNode);
     }
 
 }
+
+async function displayTiffCanvases(elements) {
+
+    for (let i = 0; i < elements.length; i++) {
+        let element = elements[i];
+
+        // let tifCanvas = await getTiffCanvas(element.src, 1);
+        let tiff = await getTiff(element.src);
+        tiffCollection[element.src] = tiff;
+        let tifCanvas = await tiffToCanvas(tiff, element.src, 1);
+
+        let tiffViewerWrapper = await generateTiffViewer(tifCanvas);
+        displayContent(tiffViewerWrapper, element);
+    }
+
+}
+
+
 
 async function changePage(canvas, page) {
     let rootElement = getTiffViewerRootElement(canvas);
@@ -137,15 +154,25 @@ function cloneCanvas(canvas) {
 }
 
 
-function printCanvas(canvas) {
-    // TODO?
-}
+async function printTiffFile(tiffFile) {
+    let totalPages = tiffFile.countDirectory();
+    let wrapper = document.createElement("div");
 
-function printTiff(tiffFile) {
-    // TODO?
+    for (let i = 1; i <= totalPages; i++) {
+        let canvas = await tiffToCanvas(tiffFile, "", i);
+        wrapper.appendChild(canvas);
+    }
+
+    printContent(wrapper);
+
 }
 
 
 let embedDomElements = document.getElementsByTagName("embed");
 let alternatiffElements = filterDomElementsByType(embedDomElements, "application/x-alternatiff");
-displayCanvases(alternatiffElements);
+displayAlternatiffCanvases(alternatiffElements);
+
+
+// let tiffElements = filterDomElementsByType(embedDomElements, "image/tiff");
+let tiffElements = document.querySelectorAll("[src$='tif']");
+displayTiffCanvases(tiffElements);

@@ -33,7 +33,9 @@ function pageIndicatorChangeListener(event) {
 
 function printButtonListener(button) {
     let canvas = getTiffViewerRootElement(button).getElementsByClassName("tiff-canvas")[0];
-    let newCanvas = cloneCanvas(canvas);
-    // let img = newCanvas.toDataURL("image/png");
-    printContent(newCanvas);
+    let tiffFile = tiffCollection[canvas.attributes["location"].value];
+    printTiffFile(tiffFile);
+    // let newCanvas = cloneCanvas(canvas);
+    // // let img = newCanvas.toDataURL("image/png");
+    // printContent(newCanvas);
 }
