@@ -40,10 +40,10 @@ async function tiffToCanvas(tiff, location, page = 1) {
     return canvas;
 }
 
-async function getTiffCanvas(tiffSrc, page = 1) {
-    let tiff = await getTiff(tiffSrc);
-    tiffCollection[tiffSrc] = tiff;
+// async function getTiffCanvas(tiffSrc, page = 1) {
+//     let tiff = await getTiff(tiffSrc);
+//     tiffCollection[tiffSrc] = tiff;
 
-    let canvas = await tiffToCanvas(tiff, tiffSrc, page);
-    return canvas;
-}
+//     let canvas = await tiffToCanvas(tiff, tiffSrc, page);
+//     return canvas;
+// }

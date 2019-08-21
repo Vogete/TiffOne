@@ -13,10 +13,10 @@ function filterDomElementsByType(elements, type) {
     return filteredElements;
 }
 
-function setDomElementSize(element, width, height) {
-    element.setAttribute('style', 'width:' + (width) + '; height: ' + (height));
-    return element;
-}
+// function setDomElementSize(element, width, height) {
+//     element.setAttribute('style', 'width:' + (width) + '; height: ' + (height));
+//     return element;
+// }
 
 function getTiffViewerRootElement(child) {
     return child.closest(".tiff-viewer");
