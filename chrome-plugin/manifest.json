@@ -26,8 +26,6 @@
             ],
             "js": [
                 "libs/tiff.min.js",
-                "js/tiffHelpers.js",
-                "js/eventHelpers.js",
                 "js/domHelpers.js",
                 "js/TiffOne.js",
                 "js/main.js"

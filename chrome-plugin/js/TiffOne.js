@@ -28,14 +28,12 @@ class TiffOne {
             this._tiffCanvases.push(pageCanvas);
         }
 
-        // TODO: finish initialize
         await this.generateTiffViewer(this._tiffCanvases[0]);
         this.displayViewer();
 
     }
 
     displayViewer(){
-        console.log(this._tiffViewerWrapper);
         this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
         this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
 
@@ -48,7 +46,7 @@ class TiffOne {
     async generateTiffViewer(canvasWrapperContent) {
 
         // Load and create HTML template
-        let tiffViewerWrapper = await loadHtmlTemplate("templates/tiffInterface.html");
+        let tiffViewerWrapper = await this.loadHtmlTemplate("templates/tiffInterface.html");
         tiffViewerWrapper.setAttribute("id", this._viewerId);
         let canvasWrapper = document.createElement("div");
         canvasWrapper.setAttribute("class", "canvas-wrapper");
@@ -62,7 +60,6 @@ class TiffOne {
             element.addEventListener("click", this.buttonClickListener.bind(this));
         }
 
-        //TODO: Refactor for OOP
         let pageIndicator = tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0];
         pageIndicator.addEventListener("change", this.pageIndicatorChangeListener.bind(this));
 
@@ -80,7 +77,9 @@ class TiffOne {
         // return this._tiffViewerWrapper;
     }
 
-
+    /**
+     * Generates an HTML Canvas from a tiff object
+     */
     async tiffToCanvas(tiff, page = 1) {
         // Needed because of how the library handles page count
         tiff.setDirectory(0);
@@ -105,6 +104,9 @@ class TiffOne {
         return canvas;
     }
 
+    /**
+     * Loads a Tiff file via AJAX
+     */
     getTiff(url) {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
@@ -126,6 +128,9 @@ class TiffOne {
         });
     }
 
+    /**
+     * Returns the total number of pages in a tiff object
+     */
     getTiffPageCount(tiff) {
         this._tiff.setDirectory(0);
         let totalPages = this._tiff.countDirectory();
@@ -169,7 +174,6 @@ class TiffOne {
     }
 
     nextPage() {
-        console.log(this._currentPage)
         this.changePage(this._currentPage + 1);
     }
 
@@ -206,7 +210,6 @@ class TiffOne {
     pageIndicatorChangeListener(event) {
         let pageIndicator = event.srcElement;
         this.changePage(parseInt(pageIndicator.value));
-        console.log(this._currentPage);
     }
 
 
@@ -243,14 +246,14 @@ class TiffOne {
 
     async loadHtmlTemplate(location) {
         let url = chrome.runtime.getURL(location);
-        let templateString = await ajaxCall(url, "GET");
+        let templateString = await this.ajaxCall(url, "GET");
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(templateString, 'text/html');
         return htmlDoc.body.firstChild;
     }
 
     async printContent(element) {
-        let printPage = await loadHtmlTemplate("templates/printTemplate.html");
+        let printPage = await this.loadHtmlTemplate("templates/printTemplate.html");
         printPage.appendChild(element);
 
         let cssLink = document.createElement('link');
