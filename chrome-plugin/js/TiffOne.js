@@ -27,13 +27,15 @@ class TiffOne {
         }
 
         // TODO: finish initialize
-        generateTiffViewer(this._tiffCanvases[0]);
+        await this.generateTiffViewer(this._tiffCanvases[0]);
+        this.displayViewer();
 
     }
 
     displayViewer(){
-        this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.height = `${targetElement.height}`;
-        this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.width = `${targetElement.width}`;
+        console.log(this._tiffViewerWrapper);
+        this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
+        this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
 
         this._targetDomElement.parentNode.replaceChild(this._tiffViewerWrapper, this._targetDomElement);
     }
@@ -122,7 +124,7 @@ class TiffOne {
 
     getTiffPageCount(tiff) {
         tiff.setDirectory(0);
-        let totalPages = tiffFile.countDirectory();
+        let totalPages = tiff.countDirectory();
         return totalPages;
     }
 
@@ -175,13 +177,13 @@ class TiffOne {
     }
 
     pageIndicatorChangeListener(event) {
-        let pageIndicator = event.srcElement
+        let pageIndicator = event.srcElement;
         changePage(pageIndicator.value);
     }
 
 
-    printButtonListener(button) {
-        printTiffFile();
+    printButtonListener() {
+        printTiffFile(this._tiff);
         // let newCanvas = cloneCanvas(canvas);
         // // let img = newCanvas.toDataURL("image/png");
         // printContent(newCanvas);

@@ -171,9 +171,25 @@ async function printTiffFile(tiffFile) {
 
 let embedDomElements = document.getElementsByTagName("embed");
 let alternatiffElements = filterDomElementsByType(embedDomElements, "application/x-alternatiff");
-displayAlternatiffCanvases(alternatiffElements);
+// displayAlternatiffCanvases(alternatiffElements);
 
 
 // let tiffElements = filterDomElementsByType(embedDomElements, "image/tiff");
-let tiffElements = document.querySelectorAll("[src$='tif']");
-displayTiffCanvases(tiffElements);
+
+// let tiffElements = document.querySelectorAll("[src$='tif']");
+// displayTiffCanvases(tiffElements);
+
+let tiffOnes = [];
+
+replaceTiffs(alternatiffElements);
+
+async function replaceTiffs(elements) {
+    for (let i = 0; i < alternatiffElements.length; i++) {
+        let element = alternatiffElements[i];
+
+        let tiffOne = new TiffOne(element, element.parentNode);
+        await tiffOne.initialize();
+        tiffOnes.push(tiffOne);
+    }
+
+}
