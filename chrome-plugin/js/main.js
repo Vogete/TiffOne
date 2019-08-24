@@ -187,9 +187,10 @@ async function replaceTiffs(elements) {
     for (let i = 0; i < alternatiffElements.length; i++) {
         let element = alternatiffElements[i];
 
-        let tiffOne = new TiffOne(element, element.parentNode);
-        await tiffOne.initialize();
+        let tiffOne = new TiffOne(element, element.parentNode, i);
         tiffOnes.push(tiffOne);
-    }
+        await tiffOnes[i].initialize();
 
+        // await tiffOne.initialize();
+    }
 }

@@ -1,5 +1,8 @@
 function buttonClickListener(event) {
     let button = event.srcElement;
+    let viewerId = getTiffViewerRootElement(button).id;
+    console.log(viewerId)
+    return 0;
     let canvas = getTiffViewerRootElement(button).getElementsByClassName("tiff-canvas")[0];
     // let canvas = button.closest(".tiff-viewer").getElementsByClassName("tiff-canvas")[0];
 

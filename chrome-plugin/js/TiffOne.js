@@ -4,10 +4,12 @@
  * the object (JavaScript Constructor can't be async)!
  */
 class TiffOne {
-    constructor(tiffDomElement, targetDomElement) {
+    constructor(tiffDomElement, targetDomElement, id) {
         this._sourceTiffDomElement = tiffDomElement;
         this._targetDomElement = targetDomElement;
         this._tiffSrc = this._sourceTiffDomElement.src;
+        this._viewerId = `TiffOne-${id}`;
+        this._currentPage = 1;
     }
 
     /**
@@ -47,6 +49,7 @@ class TiffOne {
 
         // Load and create HTML template
         let tiffViewerWrapper = await loadHtmlTemplate("templates/tiffInterface.html");
+        tiffViewerWrapper.setAttribute("id", this._viewerId);
         let canvasWrapper = document.createElement("div");
         canvasWrapper.setAttribute("class", "canvas-wrapper");
         canvasWrapper.appendChild(canvasWrapperContent);
@@ -56,12 +59,12 @@ class TiffOne {
         let tiffMenuBarButtons = tiffViewerWrapper.getElementsByTagName("button");
         for (let i = 0; i < tiffMenuBarButtons.length; i++) {
             let element = tiffMenuBarButtons[i];
-            element.addEventListener("click", this.buttonClickListener);
+            element.addEventListener("click", this.buttonClickListener.bind(this));
         }
 
         //TODO: Refactor for OOP
-        let pageIndicator = tiffViewerWrapper.getElementsByTagName("select")[0];
-        pageIndicator.addEventListener("change", this.pageIndicatorChangeListener)
+        let pageIndicator = tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0];
+        pageIndicator.addEventListener("change", this.pageIndicatorChangeListener.bind(this));
 
         // setupPageIndicator(1, canvasWrapperContent.attributes["totalPages"].value, pageIndicator);
         for (let i = 1; i <= this._totalPageCount; i++) {
@@ -70,7 +73,8 @@ class TiffOne {
             option.text = i;
             pageIndicator.appendChild(option);
         }
-        pageIndicator.value = 1;
+        this._currentPage = 1;
+        pageIndicator.value = this._currentPage;
 
         this._tiffViewerWrapper = tiffViewerWrapper;
         // return this._tiffViewerWrapper;
@@ -123,8 +127,8 @@ class TiffOne {
     }
 
     getTiffPageCount(tiff) {
-        tiff.setDirectory(0);
-        let totalPages = tiff.countDirectory();
+        this._tiff.setDirectory(0);
+        let totalPages = this._tiff.countDirectory();
         return totalPages;
     }
 
@@ -134,19 +138,43 @@ class TiffOne {
     // Toolbar methods:
     // ************************************************//
     printTiffFile() {
-        // TODO printTiffFile
+        let wrapper = document.createElement("div");
+
+        for (let i = 0; i < this._tiffCanvases.length; i++) {
+            let canvas = this.cloneCanvas(this._tiffCanvases[i]);
+            wrapper.appendChild(canvas);
+
+        }
+
+        this.printContent(wrapper);
     }
 
-    changePage() {
-        // TODO changePage
+    changePage(page) {
+        let totalPages = this.getTiffPageCount();
+        if (page > totalPages) {
+            page = totalPages;
+        } else if (page < 1) {
+            page = 1;
+        }
+
+        let canvas = this._tiffCanvases[page-1];
+        let canvasWrapper = this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0];
+        let pageIndicator = this._tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0];
+        canvasWrapper.innerHTML = "";
+        canvasWrapper.appendChild(canvas);
+
+        this._currentPage = page;
+        pageIndicator.value = page;
+
     }
 
     nextPage() {
-        // TODO nextPage
+        console.log(this._currentPage)
+        this.changePage(this._currentPage + 1);
     }
 
     previousPage(){
-        // TODO previousPage
+        this.changePage(this._currentPage - 1);
     }
 
     // ************************************************//
@@ -154,7 +182,6 @@ class TiffOne {
     // ************************************************//
     buttonClickListener(event) {
         let button = event.srcElement;
-
         switch (button.name) {
             case "tiffPageChange":
                 switch (button.value) {
@@ -178,18 +205,17 @@ class TiffOne {
 
     pageIndicatorChangeListener(event) {
         let pageIndicator = event.srcElement;
-        changePage(pageIndicator.value);
+        this.changePage(parseInt(pageIndicator.value));
+        console.log(this._currentPage);
     }
 
 
     printButtonListener() {
-        printTiffFile(this._tiff);
+        this.printTiffFile(this._tiff);
         // let newCanvas = cloneCanvas(canvas);
         // // let img = newCanvas.toDataURL("image/png");
         // printContent(newCanvas);
     }
-
-
 
 
     // ************************************************//
@@ -248,4 +274,18 @@ class TiffOne {
             },
         500);
     }
+
+    cloneCanvas(canvas) {
+        let newCanvas = document.createElement('canvas');
+        let context = newCanvas.getContext('2d');
+
+        newCanvas.width = canvas.width;
+        newCanvas.height = canvas.height;
+
+        context.drawImage(canvas, 0, 0);
+
+        return newCanvas;
+    }
+
+
 }
