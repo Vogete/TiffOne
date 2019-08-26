@@ -29,8 +29,6 @@ class TiffOne {
         }
 
         await this.generateTiffViewer(this._tiffCanvases[0]);
-        this.displayViewer();
-
     }
 
     displayViewer(){

@@ -1,5 +1,9 @@
+:root {
+    --accent-color: #009EC9;
+}
+
 .TiffOne-viewer {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
     width: fit-content;
     /* background-color: yellow; */
 }
@@ -54,7 +58,7 @@
     color: black;
     background-color: #fff;
 
-    border: 1px solid red;
+    border: 1px solid var(--accent-color);
     border-radius: 2px;
 
     cursor: pointer;
@@ -63,7 +67,7 @@
 
 .TiffOne-viewer .menu-bar .button-wrapper button:hover {
     color: white;
-    background-color: red;
+    background-color: var(--accent-color);
 }
 
 .TiffOne-viewer .menu-bar .button-wrapper button > * {
@@ -81,7 +85,7 @@
     color: black;
     background-color: #fff;
 
-    border: 1px solid red;
+    border: 1px solid var(--accent-color);
     border-radius: 2px;
     box-sizing: border-box;
 }
