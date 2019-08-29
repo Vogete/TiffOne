@@ -8,7 +8,7 @@
     /* background-color: yellow; */
 }
 
-.TiffOne-viewer .canvas-wrapper {
+.TiffOne-viewer .TiffOne-canvas-wrapper {
     background-color: darkgray;
     overflow: auto;
 
@@ -25,7 +25,7 @@
 }
 
 
-.TiffOne-viewer .canvas-wrapper .tiff-canvas {
+.TiffOne-viewer .tiff-canvas {
     max-width: 100%;
     /* max-height: 100%; */
 }
@@ -88,4 +88,32 @@
     border: 1px solid var(--accent-color);
     border-radius: 2px;
     box-sizing: border-box;
+}
+
+.tiff-fullscreen-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    /* display: flex;
+    justify-content: center; */
+}
+
+.tiff-fullscreen-canvaswrapper {
+    height: auto;
+    display: block;
+    text-align: center;
+    width: calc(100% - 2em);
+    padding: 1em;
+}
+
+.tiff-fullscreen-contentwrapper {
+
 }

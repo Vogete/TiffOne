@@ -32,10 +32,27 @@ class TiffOne {
     }
 
     displayViewer(){
-        this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
-        this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
+        this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
+        this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
 
         this._targetDomElement.parentNode.replaceChild(this._tiffViewerWrapper, this._targetDomElement);
+    }
+
+    async displayFullScreen() {
+        //TODO: full screen functionality
+        console.log(this._viewerId + " full screen");
+        let fullscreenWrapper = await this.loadHtmlTemplate("templates/fullscreenTemplate.html");
+        let canvasWrapper = fullscreenWrapper.getElementsByClassName("tiff-fullscreen-canvaswrapper")[0];
+        fullscreenWrapper.appendChild(canvasWrapper);
+
+        for (let i = 0; i < this._tiffCanvases.length; i++) {
+            let canvas = this.cloneCanvas(this._tiffCanvases[i]);
+            canvas.setAttribute("class", "tiff-canvas");
+            canvasWrapper.appendChild(canvas);
+        }
+
+        this._tiffViewerWrapper.appendChild(fullscreenWrapper);
+
     }
 
     /**
@@ -47,7 +64,7 @@ class TiffOne {
         let tiffViewerWrapper = await this.loadHtmlTemplate("templates/tiffInterface.html");
         tiffViewerWrapper.setAttribute("id", this._viewerId);
         let canvasWrapper = document.createElement("div");
-        canvasWrapper.setAttribute("class", "canvas-wrapper");
+        canvasWrapper.setAttribute("class", "TiffOne-canvas-wrapper");
         canvasWrapper.appendChild(canvasWrapperContent);
         tiffViewerWrapper.appendChild(canvasWrapper);
 
@@ -161,7 +178,7 @@ class TiffOne {
         }
 
         let canvas = this._tiffCanvases[page-1];
-        let canvasWrapper = this._tiffViewerWrapper.getElementsByClassName("canvas-wrapper")[0];
+        let canvasWrapper = this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0];
         let pageIndicator = this._tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0];
         canvasWrapper.innerHTML = "";
         canvasWrapper.appendChild(canvas);
@@ -199,6 +216,9 @@ class TiffOne {
                 break;
             case "tiffPrint":
                 this.printButtonListener();
+                break;
+            case "tiffFullScreen":
+                this.displayFullScreen();
                 break;
             default:
                 break;
