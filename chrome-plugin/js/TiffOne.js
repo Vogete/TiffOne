@@ -39,7 +39,6 @@ class TiffOne {
     }
 
     async generateFullScreenView() {
-        console.log(this._viewerId + " full screen");
         let fullscreenWrapper = await this.loadHtmlTemplate("templates/fullscreenTemplate.html");
         let canvasWrapper = fullscreenWrapper.getElementsByClassName("TiffOne-fullscreen-canvaswrapper")[0];
         fullscreenWrapper.appendChild(canvasWrapper);
@@ -221,7 +220,6 @@ class TiffOne {
 
     buttonClickListener(event) {
         let button = event.srcElement;
-        console.log(button.name);
         switch (button.name) {
             case "tiffPageChange":
                 switch (button.value) {
