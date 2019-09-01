@@ -1,0 +1,67 @@
+/* Full screen CSS: */
+
+.TiffOne-fullscreen-wrapper button {
+    /* TODO: fix these ugly importants */
+    background-color: transparent !important;
+    color: white !important;
+    border: none !important;
+}
+
+.TiffOne-fullscreen-wrapper button:hover {
+    color: var(--TiffOne-accent-color) !important;
+}
+
+
+.TiffOne-fullscreen-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 2em 0;
+    z-index: 1;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    /* display: flex;
+    justify-content: center; */
+}
+
+.TiffOne-fullscreen-canvaswrapper {
+    height: auto;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+
+    flex-flow: column;
+
+    max-width: calc(100% - 2em);
+    padding: 1em;
+}
+
+.TiffOne-fullscreen-menubar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2.5em;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.TiffOne-fullscreen-canvaswrapper .TiffOne-canvas {
+    padding: 0.5em;
+}
+
+.TiffOne-fullscreen-contentwrapper .TiffOne-button-wrapper {
+    /* TODO: fix this properly */
+    justify-content: flex-end !important;
+}
+
+.TiffOne-buttongroup-topright {
+    justify-self: flex-end;
+}
+
+.TiffOne-fullscreen-contentwrapper {
+    /* empty */
+}

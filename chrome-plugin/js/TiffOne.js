@@ -38,21 +38,34 @@ class TiffOne {
         this._targetDomElement.parentNode.replaceChild(this._tiffViewerWrapper, this._targetDomElement);
     }
 
-    async displayFullScreen() {
-        //TODO: full screen functionality
+    async generateFullScreenView() {
         console.log(this._viewerId + " full screen");
         let fullscreenWrapper = await this.loadHtmlTemplate("templates/fullscreenTemplate.html");
-        let canvasWrapper = fullscreenWrapper.getElementsByClassName("tiff-fullscreen-canvaswrapper")[0];
+        let canvasWrapper = fullscreenWrapper.getElementsByClassName("TiffOne-fullscreen-canvaswrapper")[0];
         fullscreenWrapper.appendChild(canvasWrapper);
+
+        // Setup button click event handlers
+        let tiffMenuBarButtons = fullscreenWrapper.getElementsByTagName("button");
+        this.addOnClickListener(tiffMenuBarButtons);
+
 
         for (let i = 0; i < this._tiffCanvases.length; i++) {
             let canvas = this.cloneCanvas(this._tiffCanvases[i]);
-            canvas.setAttribute("class", "tiff-canvas");
+            canvas.setAttribute("class", "TiffOne-canvas");
             canvasWrapper.appendChild(canvas);
         }
+        this._fullscreenWrapper = fullscreenWrapper;
+    }
 
-        this._tiffViewerWrapper.appendChild(fullscreenWrapper);
+    async displayFullScreen() {
+        //TODO: full screen functionality
+        this._tiffViewerWrapper.appendChild(this._fullscreenWrapper);
+    }
 
+
+
+    exitFullScreen() {
+        this._tiffViewerWrapper.removeChild(this._fullscreenWrapper);
     }
 
     /**
@@ -70,12 +83,9 @@ class TiffOne {
 
         // Setup button click event handlers
         let tiffMenuBarButtons = tiffViewerWrapper.getElementsByTagName("button");
-        for (let i = 0; i < tiffMenuBarButtons.length; i++) {
-            let element = tiffMenuBarButtons[i];
-            element.addEventListener("click", this.buttonClickListener.bind(this));
-        }
+        this.addOnClickListener(tiffMenuBarButtons);
 
-        let pageIndicator = tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0];
+        let pageIndicator = tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
         pageIndicator.addEventListener("change", this.pageIndicatorChangeListener.bind(this));
 
         // setupPageIndicator(1, canvasWrapperContent.attributes["totalPages"].value, pageIndicator);
@@ -89,6 +99,8 @@ class TiffOne {
         pageIndicator.value = this._currentPage;
 
         this._tiffViewerWrapper = tiffViewerWrapper;
+
+        this.generateFullScreenView();
         // return this._tiffViewerWrapper;
     }
 
@@ -109,7 +121,7 @@ class TiffOne {
         tiff.setDirectory(page - 1);
 
         let canvas = tiff.toCanvas();
-        canvas.setAttribute("class", "tiff-canvas");
+        canvas.setAttribute("class", "TiffOne-canvas");
 
         // TODO: this will not be needed anymore. probably
         canvas.setAttribute("location", this._tiffSrc);
@@ -179,7 +191,7 @@ class TiffOne {
 
         let canvas = this._tiffCanvases[page-1];
         let canvasWrapper = this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0];
-        let pageIndicator = this._tiffViewerWrapper.getElementsByClassName("tiff-page-indicator")[0];
+        let pageIndicator = this._tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
         canvasWrapper.innerHTML = "";
         canvasWrapper.appendChild(canvas);
 
@@ -199,8 +211,17 @@ class TiffOne {
     // ************************************************//
     // Event listener methods:
     // ************************************************//
+    addOnClickListener(elements) {
+        for (let i = 0; i < elements.length; i++) {
+            let element = elements[i];
+            element.addEventListener("click", this.buttonClickListener.bind(this));
+        }
+    }
+
+
     buttonClickListener(event) {
         let button = event.srcElement;
+        console.log(button.name);
         switch (button.name) {
             case "tiffPageChange":
                 switch (button.value) {
@@ -219,6 +240,9 @@ class TiffOne {
                 break;
             case "tiffFullScreen":
                 this.displayFullScreen();
+                break;
+            case "exitTiffFullScreen":
+                this.exitFullScreen();
                 break;
             default:
                 break;
