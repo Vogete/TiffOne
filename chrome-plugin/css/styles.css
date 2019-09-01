@@ -1,6 +1,4 @@
-:root {
-    --accent-color: #009EC9;
-}
+
 
 .TiffOne-viewer {
     box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
@@ -8,7 +6,7 @@
     /* background-color: yellow; */
 }
 
-.TiffOne-viewer .canvas-wrapper {
+.TiffOne-viewer .TiffOne-canvas-wrapper {
     background-color: darkgray;
     overflow: auto;
 
@@ -18,39 +16,38 @@
     flex-direction: column;
 }
 
-.TiffOne-viewer .menu-bar {
-    background-color: #fafafa;
-    width: 100%;
-    height: 25px;
-}
-
-
-.TiffOne-viewer .canvas-wrapper .tiff-canvas {
+.TiffOne-viewer .TiffOne-canvas {
     max-width: 100%;
     /* max-height: 100%; */
 }
 
-.TiffOne-viewer .menu-bar {
+.TiffOne-viewer .TiffOne-menubar {
     display: flex;
     justify-content: center;
     align-items: center;
 
     padding: 5px 0;
+
+    background-color: #fafafa;
+    width: 100%;
+    height: 25px;
 }
 
-.TiffOne-viewer .menu-bar .button-wrapper {
+.TiffOne-viewer .TiffOne-button-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
 
     height: 100%;
+    margin: 0 1em;
 }
 
-.TiffOne-viewer .menu-bar .button-wrapper .button-group {
+.TiffOne-viewer .TiffOne-button-group {
     margin: 0 0.7em;
+    /* margin: auto; */
 }
 
-.TiffOne-viewer .menu-bar .button-wrapper button {
+.TiffOne-viewer .TiffOne-button-wrapper button {
     height: 100%;
     width: 2.2em;
     margin: 0 0.05em;
@@ -58,23 +55,23 @@
     color: black;
     background-color: #fff;
 
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--TiffOne-accent-color);
     border-radius: 2px;
 
     cursor: pointer;
 }
 
 
-.TiffOne-viewer .menu-bar .button-wrapper button:hover {
+.TiffOne-viewer .TiffOne-button-wrapper button:hover {
     color: white;
-    background-color: var(--accent-color);
+    background-color: var(--TiffOne-accent-color);
 }
 
-.TiffOne-viewer .menu-bar .button-wrapper button > * {
+.TiffOne-viewer .TiffOne-button-wrapper button > * {
     pointer-events: none;
 }
 
-.TiffOne-viewer .menu-bar .button-wrapper .tiff-page-indicator {
+.TiffOne-viewer .TiffOne-page-indicator {
     width: auto;
     min-width: 2.5em;
     height: 100%;
@@ -85,7 +82,7 @@
     color: black;
     background-color: #fff;
 
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--TiffOne-accent-color);
     border-radius: 2px;
     box-sizing: border-box;
 }

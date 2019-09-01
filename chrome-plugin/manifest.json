@@ -30,6 +30,8 @@
                 "js/main.js"
             ],
             "css": [
+                "css/variables.css",
+                "css/styles-fullscreen.css",
                 "css/styles.css",
                 "css/font-awesome.min.css"
             ]
