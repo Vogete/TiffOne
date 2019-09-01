@@ -16,22 +16,12 @@
         "fonts/*",
         "css/printing.css"
     ],
-    "content_scripts": [
-        {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "libs/tiff.min.js",
-                "js/TiffOne.js",
-                "js/main.js"
-            ],
-            "css": [
-                "css/variables.css",
-                "css/styles-fullscreen.css",
-                "css/styles.css",
-                "css/font-awesome.min.css"
-            ]
-        }
-    ]
+    "permissions": [
+        "activeTab",
+        "<all_urls>"
+    ],
+    "background": {
+        "scripts": ["js/background.js"],
+        "persistent": false
+    }
 }
