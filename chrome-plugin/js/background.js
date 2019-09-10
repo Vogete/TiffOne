@@ -1,7 +1,18 @@
-function loadChrome() {
-    // Code exectution on tab load:
-    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+async function loadChrome() {
+    // let isEnabled = await getEnabledState();
+    // console.log(isEnabled);
+    // if (isEnabled != true) {
+        //     console.log("not enabled");
+        //     return;
+        // }
+        // console.log("enabled");
+
+        // Code exectution on tab load:
+        chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         if (changeInfo.status == 'complete') {
+
+            console.log("tabs onupdated");
+
 
             chrome.tabs.insertCSS({file:"css/variables.css"});
             chrome.tabs.insertCSS({file:"css/styles-fullscreen.css"});

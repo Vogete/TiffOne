@@ -1,6 +1,8 @@
 async function getEnabledState() {
     let isEnabledKey = "isEnabled";
 
+    // This is necessary because the chrome.* API
+    // does not support Promises or async/await
     let isEnabledResult = await (function() {
         return new Promise(function(resolve) {
             chrome.storage.local.get([isEnabledKey], function(result) {
@@ -9,7 +11,6 @@ async function getEnabledState() {
         });
     })();
 
-    console.log(isEnabledResult[isEnabledKey]);
     return isEnabledResult[isEnabledKey];
 }
 
