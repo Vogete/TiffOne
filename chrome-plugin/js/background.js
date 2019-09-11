@@ -1,18 +1,21 @@
+/**
+ *  Executing Chrome specific code
+ */
 async function loadChrome() {
-    // let isEnabled = await getEnabledState();
-    // console.log(isEnabled);
-    // if (isEnabled != true) {
-        //     console.log("not enabled");
-        //     return;
-        // }
-        // console.log("enabled");
 
-        // Code exectution on tab load:
-        chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    // On extension install, set the extension to enabled
+    chrome.runtime.onInstalled.addListener(function() {
+            setEnabledState(true);
+    });
+
+    // Code exectution on tab load:
+    chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
         if (changeInfo.status == 'complete') {
 
-            console.log("tabs onupdated");
-
+            let isEnabled = await getEnabledState();
+            if (!isEnabled) {
+                return;
+            }
 
             chrome.tabs.insertCSS({file:"css/variables.css"});
             chrome.tabs.insertCSS({file:"css/styles-fullscreen.css"});
@@ -55,8 +58,8 @@ let isBlink = (isChrome || isOpera) && !!window.CSS;
 
 /* The above code is based on code from: https://stackoverflow.com/a/9851769/3773011 */
 //Verification:
-let log = console.log;
-if(isEdge) log = alert; //Edge console.log() does not work, but alert() does.
+// let log = console.log;
+// if(isEdge) log = alert; //Edge console.log() does not work, but alert() does.
 // log('isChrome: ' + isChrome);
 // log('isEdge: ' + isEdge);
 // log('isFirefox: ' + isFirefox);
@@ -68,5 +71,5 @@ if(isEdge) log = alert; //Edge console.log() does not work, but alert() does.
 if (isBlink) {
     loadChrome();
 } else if (isFirefox) {
-    // implement firefox
+    //TODO: implement firefox
 }

@@ -3,13 +3,29 @@ async function onOffSwitchClicked(event) {
     let isChecked = switchButton.checked;
 
     setEnabledState(isChecked);
+    setStatusIndicator(isChecked);
 }
 
 async function setOnOffSwitchState(onOffSwitch) {
     let isEnabled = await getEnabledState();
 
-    // console.log(isEnabled);
     onOffSwitch.checked = isEnabled;
+    setStatusIndicator(isEnabled);
+}
+
+function setStatusIndicator(status) {
+    let statusIndicator = document.getElementById("status-indicator");
+
+    if (status == true) {
+        statusIndicator.innerText = "ON";
+        statusIndicator.classList.remove("color-error");
+        statusIndicator.classList.add("color-ok");
+        return;
+    }
+    statusIndicator.innerText = "OFF";
+    statusIndicator.classList.remove("color-ok");
+    statusIndicator.classList.add("color-error");
+
 }
 
 let onOffSwitch = document.getElementById("onOffSwitch");

@@ -57,7 +57,6 @@ class TiffOne {
     }
 
     async displayFullScreen() {
-        //TODO: full screen functionality
         this._tiffViewerWrapper.appendChild(this._fullscreenWrapper);
     }
 
@@ -122,7 +121,7 @@ class TiffOne {
         let canvas = tiff.toCanvas();
         canvas.setAttribute("class", "TiffOne-canvas");
 
-        // TODO: this will not be needed anymore. probably
+        // This will not be needed anymore, but doesn't harm anyone :)
         canvas.setAttribute("location", this._tiffSrc);
         canvas.setAttribute("page", page);
         canvas.setAttribute("totalPages", pageCount);

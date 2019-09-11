@@ -17,8 +17,7 @@
         "css/printing.css"
     ],
     "permissions": [
-        "activeTab",
-        "<all_urls>",
+        "*://*/*",
         "file://*/*",
         "storage"
     ],

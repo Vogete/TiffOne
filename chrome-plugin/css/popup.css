@@ -47,9 +47,26 @@ body {
     height: 34px;
 }
 
-h1 {
-
+.title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--TiffOne-accent-color);
+    margin: 0.5em;
 }
+
+.color-error {
+    color: var(--TiffOne-warning-color);
+}
+
+
+.color-warning {
+    color: var(--TiffOne-error-color);
+}
+
+.color-ok {
+    color: var(--TiffOne-ok-color);
+}
+
 
 .switch {
     margin: 0.5em;
@@ -72,8 +89,8 @@ h1 {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: var(--TiffOne-switch-transition-time);
+    transition: var(--TiffOne-switch-transition-time);
 }
 
 .slider:before {
@@ -84,8 +101,8 @@ h1 {
     left: 4px;
     bottom: 4px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
+    -webkit-transition: var(--TiffOne-switch-transition-time);
+    transition: var(--TiffOne-switch-transition-time);
 }
 
 input:checked+.slider {
