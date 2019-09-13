@@ -1,3 +1,10 @@
 :root {
     --TiffOne-accent-color: #009EC9;
+
+    --TiffOne-error-color: #b71c1c;
+    --TiffOne-warning-color: #e65100;
+    --TiffOne-ok-color: #33691e;
+
+    --TiffOne-switch-transition-time: .1s;
+
 }
