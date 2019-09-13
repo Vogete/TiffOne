@@ -20,12 +20,13 @@ function setStatusIndicator(status) {
         statusIndicator.innerText = "ON";
         statusIndicator.classList.remove("color-error");
         statusIndicator.classList.add("color-ok");
+        setBrowserIcon("TiffOne_logo_48px.png");
         return;
     }
     statusIndicator.innerText = "OFF";
     statusIndicator.classList.remove("color-ok");
     statusIndicator.classList.add("color-error");
-
+    setBrowserIcon("TiffOne_logo_48px_grey.png");
 }
 
 let onOffSwitch = document.getElementById("onOffSwitch");

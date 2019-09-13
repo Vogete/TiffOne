@@ -14,6 +14,7 @@ async function loadChrome() {
 
             let isEnabled = await getEnabledState();
             if (!isEnabled) {
+                setBrowserIcon("TiffOne_logo_48px_grey.png");
                 return;
             }
 
@@ -30,6 +31,9 @@ async function loadChrome() {
     });
 }
 
+async function loadFirefox() {
+    // TODO: load scripts and CSS for firefox
+}
 
 
 // Opera 8.0+ (tested on Opera 42.0)

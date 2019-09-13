@@ -15,6 +15,14 @@ async function getEnabledState() {
 }
 
 async function setEnabledState(state) {
+    // TODO: make it cross platform
     chrome.storage.local.set({isEnabled: state}, function() {
     });
+}
+
+function setBrowserIcon(iconName) {
+    const iconPath = `../assets/${iconName}`;
+
+    // TODO: make it cross platform
+    chrome.browserAction.setIcon({path: iconPath});
 }
