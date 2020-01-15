@@ -47,7 +47,7 @@
     /* margin: auto; */
 }
 
-.TiffOne-viewer .TiffOne-button-wrapper button {
+.TiffOne-viewer .TiffOne-button-wrapper .TiffOne-Button {
     height: 100%;
     width: 2.2em;
     margin: 0 0.05em;
@@ -62,12 +62,12 @@
 }
 
 
-.TiffOne-viewer .TiffOne-button-wrapper button:hover {
+.TiffOne-viewer .TiffOne-button-wrapper .TiffOne-Button:hover {
     color: white;
     background-color: var(--TiffOne-accent-color);
 }
 
-.TiffOne-viewer .TiffOne-button-wrapper button > * {
+.TiffOne-viewer .TiffOne-button-wrapper .TiffOne-Button > * {
     pointer-events: none;
 }
 

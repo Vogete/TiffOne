@@ -85,7 +85,9 @@ class TiffOne {
 
         // Setup button click event handlers
         let tiffMenuBarButtons = tiffViewerWrapper.getElementsByTagName("button");
+        let tiffMenuBarButtonDivs = tiffViewerWrapper.querySelectorAll(".TiffOne-Button");
         this.addOnClickListener(tiffMenuBarButtons);
+        this.addOnClickListener(tiffMenuBarButtonDivs);
 
         // let pageIndicator = tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
         let pageIndicator = tiffViewerWrapper.querySelectorAll(".TiffOne-page-indicator")[0];
@@ -226,9 +228,13 @@ class TiffOne {
 
     buttonClickListener(event) {
         let button = event.srcElement;
-        switch (button.name) {
+        const buttonName = button.getAttribute("name");
+        const buttonValue = button.getAttribute("value");
+        console.log(buttonName);
+        console.log(buttonValue);
+        switch (buttonName) {
             case "tiffPageChange":
-                switch (button.value) {
+                switch (buttonValue) {
                     case "nextPage":
                         this.nextPage();
                         break;
