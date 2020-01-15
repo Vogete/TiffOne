@@ -48,20 +48,24 @@ function createMutationObserver(domObject) {
             console.log("iframe Mutation observer fired");
 
             iframeElement.addEventListener('load', function() {
-                runTiffOneOnDocumentObject(iframeElement.contentWindow.document)
+
+                chrome.runtime.sendMessage({type: "TiffOne-Iframe-load", options: {
+                    type: "basic",
+                    title: "Iframe loaded",
+                    message: "Iframe loaded"
+                }});
+
+                // runTiffOneOnDocumentObject(iframeElement.contentWindow.document)
             }, true);
         });
 
     });
 
     var container = domObject;
-    // console.log(container);
     var config = { attributes: true, childList: true, characterData: true };
     dom_observer.observe(container, config);
 
-
-
 }
 
-runTiffOneOnDocumentObject(document);
 createMutationObserver(document.body);
+runTiffOneOnDocumentObject(document);
