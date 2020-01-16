@@ -61,7 +61,7 @@ class TiffOne {
 
     async displayFullScreen() {
         this._tiffViewerWrapper.appendChild(this._fullscreenWrapper);
-        console.log("DisplayFullScreen");
+        // console.log("DisplayFullScreen");
     }
 
 

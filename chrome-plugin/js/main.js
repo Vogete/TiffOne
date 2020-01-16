@@ -22,6 +22,8 @@ async function replaceTiffs(elements, idStart = 0) {
 }
 
 async function runTiffOneOnDocumentObject(documentObj) {
+    // console.log("TiffOne runs");
+
     let alternatiffElements = documentObj.querySelectorAll("[type='application/x-alternatiff']");
     // Get all elements which has a tif extentions as source
     let tiffElements = documentObj.querySelectorAll("[src$='tif' i]:not([type='application/x-alternatiff']), [src$='tiff' i]:not([type='application/x-alternatiff'])");
@@ -49,8 +51,11 @@ async function runTiffOneOnDocumentObject(documentObj) {
 function createMutationObserver(domObject) {
 
     let dom_observer = new MutationObserver(function (mutation) {
+        runTiffOneOnDocumentObject(document);
+        // console.log("Mutation detected")
+
         domObject.querySelectorAll('iframe').forEach(iframeElement => {
-            createMutationObserver(iframeElement.contentWindow.document);
+            // createMutationObserver(iframeElement.contentWindow.document);
             // console.log("iframe Mutation observer fired");
 
             iframeElement.addEventListener('load', function() {
