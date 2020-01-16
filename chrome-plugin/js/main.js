@@ -51,7 +51,7 @@ function createMutationObserver(domObject) {
     let dom_observer = new MutationObserver(function (mutation) {
         domObject.querySelectorAll('iframe').forEach(iframeElement => {
             createMutationObserver(iframeElement.contentWindow.document);
-            console.log("iframe Mutation observer fired");
+            // console.log("iframe Mutation observer fired");
 
             iframeElement.addEventListener('load', function() {
 
@@ -62,7 +62,7 @@ function createMutationObserver(domObject) {
                         message: "Iframe loaded"
                     }
                 });
-                console.log("iframe loaded");
+                // console.log("iframe loaded");
 
                 // runTiffOneOnDocumentObject(iframeElement.contentWindow.document)
             }, true);

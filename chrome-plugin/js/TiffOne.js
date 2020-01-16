@@ -47,7 +47,7 @@ class TiffOne {
         fullscreenWrapper.appendChild(canvasWrapper);
 
         // Setup button click event handlers
-        let tiffMenuBarButtons = fullscreenWrapper.getElementsByTagName("button");
+        let tiffMenuBarButtons = fullscreenWrapper.querySelectorAll(".TiffOne-fsexit-button");
         this.addOnClickListener(tiffMenuBarButtons);
 
 
@@ -230,8 +230,8 @@ class TiffOne {
         let button = event.srcElement;
         const buttonName = button.getAttribute("name");
         const buttonValue = button.getAttribute("value");
-        console.log(buttonName);
-        console.log(buttonValue);
+        // console.log(button);
+        // console.log(`Button Name: ${buttonName} | Button Value: ${buttonValue}`);
         switch (buttonName) {
             case "tiffPageChange":
                 switch (buttonValue) {
