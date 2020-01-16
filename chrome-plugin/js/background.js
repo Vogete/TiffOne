@@ -18,14 +18,14 @@ async function loadChrome() {
                 return;
             }
 
-            chrome.tabs.insertCSS({file:"css/variables.css"});
-            chrome.tabs.insertCSS({file:"css/styles-fullscreen.css"});
-            chrome.tabs.insertCSS({file:"css/styles.css"});
-            chrome.tabs.insertCSS({file:"css/font-awesome.min.css"});
+            chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
+            chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
+            chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
+            chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
 
-            chrome.tabs.executeScript({file: "libs/tiff.min.js"});
-            chrome.tabs.executeScript({file: "js/TiffOne.js"});
-            chrome.tabs.executeScript({file: "js/main.js"});
+            chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
+            chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
+            chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
 
         }
     });
@@ -75,5 +75,20 @@ let isBlink = (isChrome || isOpera) && !!window.CSS;
 if (isBlink) {
     loadChrome();
 } else if (isFirefox) {
-    //TODO: implement firefox
+    loadFirefox();
 }
+
+// TODO: cleanup and refactor a bit (especially if firefox support is added)
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.type == "TiffOne-Iframe-load"){
+        chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
+        chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
+        chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
+        chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+
+        chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
+        chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
+        chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
+    }
+    sendResponse();
+});

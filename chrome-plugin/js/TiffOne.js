@@ -32,19 +32,22 @@ class TiffOne {
     }
 
     displayViewer(){
-        this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
-        this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
+        // this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
+        // this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
+        this._tiffViewerWrapper.querySelectorAll(".TiffOne-canvas-wrapper")[0].style.height = `${this._sourceTiffDomElement.height}`;
+        this._tiffViewerWrapper.querySelectorAll(".TiffOne-canvas-wrapper")[0].style.width = `${this._sourceTiffDomElement.width}`;
 
         this._targetDomElement.parentNode.replaceChild(this._tiffViewerWrapper, this._targetDomElement);
     }
 
     async generateFullScreenView() {
         let fullscreenWrapper = await this.loadHtmlTemplate("templates/fullscreenTemplate.html");
-        let canvasWrapper = fullscreenWrapper.getElementsByClassName("TiffOne-fullscreen-canvaswrapper")[0];
+        // let canvasWrapper = fullscreenWrapper.getElementsByClassName("TiffOne-fullscreen-canvaswrapper")[0];
+        let canvasWrapper = fullscreenWrapper.querySelectorAll(".TiffOne-fullscreen-canvaswrapper")[0];
         fullscreenWrapper.appendChild(canvasWrapper);
 
         // Setup button click event handlers
-        let tiffMenuBarButtons = fullscreenWrapper.getElementsByTagName("button");
+        let tiffMenuBarButtons = fullscreenWrapper.querySelectorAll(".TiffOne-fsexit-button");
         this.addOnClickListener(tiffMenuBarButtons);
 
 
@@ -58,6 +61,7 @@ class TiffOne {
 
     async displayFullScreen() {
         this._tiffViewerWrapper.appendChild(this._fullscreenWrapper);
+        // console.log("DisplayFullScreen");
     }
 
 
@@ -81,9 +85,12 @@ class TiffOne {
 
         // Setup button click event handlers
         let tiffMenuBarButtons = tiffViewerWrapper.getElementsByTagName("button");
+        let tiffMenuBarButtonDivs = tiffViewerWrapper.querySelectorAll(".TiffOne-Button");
         this.addOnClickListener(tiffMenuBarButtons);
+        this.addOnClickListener(tiffMenuBarButtonDivs);
 
-        let pageIndicator = tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
+        // let pageIndicator = tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
+        let pageIndicator = tiffViewerWrapper.querySelectorAll(".TiffOne-page-indicator")[0];
         pageIndicator.addEventListener("change", this.pageIndicatorChangeListener.bind(this));
 
         // setupPageIndicator(1, canvasWrapperContent.attributes["totalPages"].value, pageIndicator);
@@ -188,8 +195,10 @@ class TiffOne {
         }
 
         let canvas = this._tiffCanvases[page-1];
-        let canvasWrapper = this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0];
-        let pageIndicator = this._tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
+        // let canvasWrapper = this._tiffViewerWrapper.getElementsByClassName("TiffOne-canvas-wrapper")[0];
+        // let pageIndicator = this._tiffViewerWrapper.getElementsByClassName("TiffOne-page-indicator")[0];
+        let canvasWrapper = this._tiffViewerWrapper.querySelectorAll(".TiffOne-canvas-wrapper")[0];
+        let pageIndicator = this._tiffViewerWrapper.querySelectorAll(".TiffOne-page-indicator")[0];
         canvasWrapper.innerHTML = "";
         canvasWrapper.appendChild(canvas);
 
@@ -219,9 +228,13 @@ class TiffOne {
 
     buttonClickListener(event) {
         let button = event.srcElement;
-        switch (button.name) {
+        const buttonName = button.getAttribute("name");
+        const buttonValue = button.getAttribute("value");
+        // console.log(button);
+        // console.log(`Button Name: ${buttonName} | Button Value: ${buttonValue}`);
+        switch (buttonName) {
             case "tiffPageChange":
-                switch (button.value) {
+                switch (buttonValue) {
                     case "nextPage":
                         this.nextPage();
                         break;

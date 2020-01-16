@@ -1,13 +1,15 @@
 /* Full screen CSS: */
 
-.TiffOne-fullscreen-wrapper button {
+.TiffOne-fullscreen-wrapper .TiffOne-fsexit-button {
     /* TODO: fix these ugly importants */
     background-color: transparent !important;
     color: white !important;
     border: none !important;
+
+    cursor: pointer;
 }
 
-.TiffOne-fullscreen-wrapper button:hover {
+.TiffOne-fullscreen-wrapper .TiffOne-fsexit-button:hover {
     color: var(--TiffOne-accent-color) !important;
 }
 

@@ -30,7 +30,8 @@
 
     background-color: #fafafa;
     width: 100%;
-    height: 25px;
+    /* height: 25px; */
+    /* height: 1.5em; */
 }
 
 .TiffOne-viewer .TiffOne-button-wrapper {
@@ -44,30 +45,37 @@
 
 .TiffOne-viewer .TiffOne-button-group {
     margin: 0 0.7em;
+    height: 1.5em;
+    display: flex;
     /* margin: auto; */
 }
 
-.TiffOne-viewer .TiffOne-button-wrapper button {
+.TiffOne-viewer .TiffOne-button-wrapper .TiffOne-Menubar-Button {
     height: 100%;
     width: 2.2em;
     margin: 0 0.05em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     color: black;
     background-color: #fff;
 
     border: 1px solid var(--TiffOne-accent-color);
     border-radius: 2px;
+    box-sizing: border-box;
 
     cursor: pointer;
 }
 
 
-.TiffOne-viewer .TiffOne-button-wrapper button:hover {
+.TiffOne-viewer .TiffOne-button-wrapper .TiffOne-Menubar-Button:hover {
     color: white;
     background-color: var(--TiffOne-accent-color);
 }
 
-.TiffOne-viewer .TiffOne-button-wrapper button > * {
+.TiffOne-viewer .TiffOne-button-wrapper .TiffOne-Menubar-Button > * {
     pointer-events: none;
 }
 
