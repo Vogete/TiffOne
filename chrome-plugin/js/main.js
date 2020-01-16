@@ -63,7 +63,6 @@ function createMutationObserver(domObject) {
                     }
                 });
                 // console.log("iframe loaded");
-
                 // runTiffOneOnDocumentObject(iframeElement.contentWindow.document)
             }, true);
         });

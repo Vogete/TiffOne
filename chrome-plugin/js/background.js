@@ -76,13 +76,11 @@ if (isBlink) {
     loadChrome();
 } else if (isFirefox) {
     loadFirefox();
-    //TODO: implement firefox
 }
 
-// TODO: cleanup
+// TODO: cleanup and refactor a bit (especially if firefox support is added)
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.type == "TiffOne-Iframe-load"){
-
         chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
         chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
         chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
@@ -91,9 +89,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
         chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
         chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
-
     }
-
     sendResponse();
-
 });
