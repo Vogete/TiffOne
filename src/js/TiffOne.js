@@ -10,6 +10,7 @@ class TiffOne {
         this._tiffSrc = this._sourceTiffDomElement.src;
         this._viewerId = `TiffOne-${id}`;
         this._currentPage = 1;
+        console.log("TiffOne obj constructed");
     }
 
     /**
@@ -18,16 +19,19 @@ class TiffOne {
      */
     async initialize() {
         // get tiff file and its total page count
+        console.log("TiffOne obj initalization started");
         this._tiff = await this.getTiff(this._tiffSrc);
         this._totalPageCount = this.getTiffPageCount(this._tiff);
-
         // Create an array of tiff canvases. (longer loading time, but faster page turns)
         this._tiffCanvases = [];
         for (let i = 1; i <= this._totalPageCount; i++) {
+            console.log("unicorn2");
             let pageCanvas = await this.tiffToCanvas(this._tiff, i);
+            console.log("unicorn3");
             this._tiffCanvases.push(pageCanvas);
         }
-
+        console.log(this._tiffCanvases);
+        console.log("TiffOne obj initalization kinda finished");
         await this.generateTiffViewer(this._tiffCanvases[0]);
     }
 
@@ -106,6 +110,7 @@ class TiffOne {
         this._tiffViewerWrapper = tiffViewerWrapper;
 
         this.generateFullScreenView();
+        console.log(this._tiffViewerWrapper);
         // return this._tiffViewerWrapper;
     }
 

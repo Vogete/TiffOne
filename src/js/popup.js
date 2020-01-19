@@ -1,3 +1,5 @@
+// Popup.js is imported in popup.html
+
 async function onOffSwitchClicked(event) {
     let switchButton = event.srcElement;
     let isChecked = switchButton.checked;

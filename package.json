@@ -1,0 +1,31 @@
+{
+    "name": "tiffone",
+    "version": "0.4.0",
+    "description": "A small browser extension that displays TIFF (*.tiff) files (especially AlternaTIFF) objects) with support for multi-page TIFF files.",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack",
+        "start:firefox": "web-ext run --source-dir ./src/ --firefox=firefoxdeveloperedition"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Vogete/TiffOne.git"
+    },
+    "author": "Zoltán Fraknói",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/Vogete/TiffOne/issues"
+    },
+    "keywords": [
+        "tiff",
+        "tif",
+        "tiffone",
+        "alternatiff"
+    ],
+    "homepage": "https://github.com/Vogete/TiffOne",
+    "devDependencies": {
+        "web-ext": "^4.0.0",
+        "webextension-polyfill": "^0.6.0"
+    },
+    "dependencies": {}
+}

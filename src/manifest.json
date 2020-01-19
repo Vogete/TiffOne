@@ -27,6 +27,7 @@
     },
     "background": {
         "scripts": [
+            "libs/browser-polyfill.js",
             "js/helper.js",
             "js/background.js"
         ],

@@ -1,5 +1,4 @@
 let tiffOnes = [];
-
 let allTiffDomContent = [];
 
 function uuidv4() {
@@ -9,14 +8,15 @@ function uuidv4() {
 }
 
 
-async function replaceTiffs(elements, idStart = 0) {
+async function replaceTiffs(elements) {
+    console.log(elements);
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
+
 
         let tiffOne = new TiffOne(element, element, uuidv4());
         await tiffOne.initialize();
         tiffOne.displayViewer();
-
         tiffOnes.push(tiffOne);
     }
 }
@@ -27,7 +27,6 @@ async function runTiffOneOnDocumentObject(documentObj) {
     let alternatiffElements = documentObj.querySelectorAll("[type='application/x-alternatiff']");
     // Get all elements which has a tif extentions as source
     let tiffElements = documentObj.querySelectorAll("[src$='tif' i]:not([type='application/x-alternatiff']), [src$='tiff' i]:not([type='application/x-alternatiff'])");
-
     replaceTiffs(alternatiffElements);
     replaceTiffs(tiffElements);
 }
@@ -52,7 +51,7 @@ function createMutationObserver(domObject) {
 
     let dom_observer = new MutationObserver(function (mutation) {
         runTiffOneOnDocumentObject(document);
-        // console.log("Mutation detected")
+        console.log("Mutation detected");
 
         domObject.querySelectorAll('iframe').forEach(iframeElement => {
             // createMutationObserver(iframeElement.contentWindow.document);
@@ -60,7 +59,7 @@ function createMutationObserver(domObject) {
 
             iframeElement.addEventListener('load', function() {
 
-                chrome.runtime.sendMessage({
+                browser.runtime.sendMessage({
                     type: "TiffOne-Iframe-load", options: {
                         type: "basic",
                         title: "Iframe loaded",
@@ -80,5 +79,6 @@ function createMutationObserver(domObject) {
 
 }
 
+// console.log("extension loaded");
 createMutationObserver(document.body);
 runTiffOneOnDocumentObject(document);

@@ -1,15 +1,29 @@
+
+
+function loadResources() {
+    browser.tabs.insertCSS({file:"css/variables.css", allFrames: true});
+    browser.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
+    browser.tabs.insertCSS({file:"css/styles.css", allFrames: true});
+    browser.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+
+    browser.tabs.executeScript({file: "libs/browser-polyfill.js", allFrames: true});
+    browser.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
+    browser.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
+    browser.tabs.executeScript({file: "js/main.js", allFrames: true});
+}
+
 /**
- *  Executing Chrome specific code
+ *  Executing the extension
  */
-async function loadChrome() {
+async function loadExtension() {
 
     // On extension install, set the extension to enabled
-    chrome.runtime.onInstalled.addListener(function() {
+    browser.runtime.onInstalled.addListener(function() {
             setEnabledState(true);
     });
 
     // Code exectution on tab load:
-    chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
+    browser.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
         if (changeInfo.status == 'complete') {
 
             let isEnabled = await getEnabledState();
@@ -17,23 +31,18 @@ async function loadChrome() {
                 setBrowserIcon("TiffOne_logo_48px_grey.png");
                 return;
             }
-
-            chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
-
-            chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
-            chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
-            chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
-
+            loadResources();
         }
     });
 }
 
-async function loadFirefox() {
-    // TODO: load scripts and CSS for firefox
-}
+browser.runtime.onMessage.addListener((data, sender) => {
+    if (data.type == "TiffOne-Iframe-load"){
+        loadResources();
+        return Promise.resolve('done');
+    }
+    return Promise.resolve('not-really-done');
+});
 
 
 // Opera 8.0+ (tested on Opera 42.0)
@@ -73,22 +82,16 @@ let isBlink = (isChrome || isOpera) && !!window.CSS;
 
 
 if (isBlink) {
-    loadChrome();
+    // loadExtension();
 } else if (isFirefox) {
-    loadFirefox();
 }
 
-// TODO: cleanup and refactor a bit (especially if firefox support is added)
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type == "TiffOne-Iframe-load"){
-        chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
-        chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
-        chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
-        chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+loadExtension();
 
-        chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
-        chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
-        chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
-    }
-    sendResponse();
-});
+// TODO: cleanup and refactor a bit (especially if firefox support is added)
+// browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+//     if (request.type == "TiffOne-Iframe-load"){
+//         loadResources();
+//     }
+//     sendResponse();
+// });
