@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "TiffOne",
-    "version": "0.3",
+    "version": "0.3.1",
     "description": "A small browser extension that displays TIFF (*.tiff) files (especially Alternatiff objects) with support for multi-page TIFF files.",
     "author": "Zoltán Fraknói",
     "minimum_chrome_version": "51",

@@ -5,7 +5,7 @@ async function loadChrome() {
 
     // On extension install, set the extension to enabled
     chrome.runtime.onInstalled.addListener(function() {
-            setEnabledState(true);
+        setEnabledState(true);
     });
 
     // Code exectution on tab load:
@@ -29,6 +29,8 @@ async function loadChrome() {
 
         }
     });
+
+    addMessageListeners();
 }
 
 async function loadFirefox() {
@@ -78,17 +80,53 @@ if (isBlink) {
     loadFirefox();
 }
 
-// TODO: cleanup and refactor a bit (especially if firefox support is added)
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.type == "TiffOne-Iframe-load"){
-        chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
-        chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
-        chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
-        chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+function addMessageListeners() {
 
-        chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
-        chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
-        chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
-    }
-    sendResponse();
-});
+    // TODO: cleanup and refactor a bit (especially if firefox support is added)
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        if (request.type == "TiffOne-Iframe-load"){
+            chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
+            chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
+            chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
+            chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+
+            chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
+            chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
+            chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
+            sendResponse(true);
+        }
+
+        if (request.type == "TiffOne-getTiffFile") {
+            console.log("TiffOne-getTiffFile message received")
+
+            let xhrPromise = new Promise(function (resolve, reject) {
+
+                let xhr = new XMLHttpRequest();
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = function (e) {
+                    resolve(xhr.response);
+                };
+                xhr.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: xhr.statusText
+                    });
+                };
+
+                xhr.open("GET", request.message, true);
+                xhr.send(null);
+            });
+
+            xhrPromise.then(function(tiffArrayBuffer) {
+                let blob = new Blob([ tiffArrayBuffer ], { type: 'arraybuffer' })
+                sendResponse(URL.createObjectURL(blob));
+            });
+
+        }
+
+        // Needed for Async sendResponse
+        return true; // keeps the message channel open until `sendResponse` is executed
+
+    });
+
+}

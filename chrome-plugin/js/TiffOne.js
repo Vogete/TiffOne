@@ -139,24 +139,59 @@ class TiffOne {
     /**
      * Loads a Tiff file via AJAX
      */
-    getTiff(url) {
+    async getTiff(url) {
         return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.responseType = 'arraybuffer';
 
-            xhr.open("GET", url);
+            const regex = "file:\\/\\/.*";
+            const regexMatch = url.match(regex);
+            const isFile = (url == regexMatch[0])
 
-            xhr.onload = function (e) {
-                let tiff = new Tiff({ buffer: xhr.response });
-                resolve(tiff);
-            };
-            xhr.onerror = function () {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
+            if (isFile) {
+                chrome.runtime.sendMessage({
+                    type: "TiffOne-getTiffFile",
+                    message: url
+                }, function (response) {
+
+                    console.log("response from background");
+                    console.log(response);
+
+                    // let tiff = new Tiff({ buffer: response });
+
+                    let xhr = new XMLHttpRequest();
+                    xhr.responseType = 'arraybuffer';
+                    xhr.open("GET", response, true);
+                    xhr.onload = function (e) {
+                        let tiff = new Tiff({ buffer: xhr.response });
+                        resolve(tiff);
+                    };
+                    xhr.onerror = function () {
+                        reject({
+                            status: this.status,
+                            statusText: xhr.statusText
+                        });
+                    };
+                    xhr.send(null);
+
+                    resolve(tiff);
                 });
-            };
-            xhr.send();
+            } else {
+                let xhr = new XMLHttpRequest();
+                xhr.responseType = 'arraybuffer';
+                xhr.open("GET", response, true);
+                xhr.onload = function (e) {
+                    let tiff = new Tiff({ buffer: xhr.response });
+                    resolve(tiff);
+                };
+                xhr.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: xhr.statusText
+                    });
+                };
+                xhr.send(null);
+                resolve(tiff);
+            }
+
         });
     }
 
@@ -276,12 +311,11 @@ class TiffOne {
     // ************************************************//
     // Helper methods:
     // ************************************************//
-    ajaxCall(url, type = "GET") {
+    async ajaxCall(url, type = "GET") {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             // xhr.responseType = 'arraybuffer';
-
-            xhr.open(type, url);
+            xhr.open(type, url, true);
 
             xhr.onload = function (e) {
                 resolve(xhr.response);
@@ -292,7 +326,7 @@ class TiffOne {
                     statusText: xhr.statusText
                 });
             };
-            xhr.send();
+            xhr.send(null);
         });
     }
 
