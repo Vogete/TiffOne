@@ -27,10 +27,10 @@ async function loadChrome() {
             chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
             chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
 
+            addMessageListeners();
         }
     });
 
-    addMessageListeners();
 }
 
 async function loadFirefox() {
@@ -84,6 +84,8 @@ function addMessageListeners() {
 
     // TODO: cleanup and refactor a bit (especially if firefox support is added)
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        // Needed for iframe load to inject the contents into all iframes
+        // TODO: clean up code so it only injects into new iframes that has no TiffOne yet
         if (request.type == "TiffOne-Iframe-load"){
             chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
             chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
@@ -97,9 +99,19 @@ function addMessageListeners() {
         }
 
         if (request.type == "TiffOne-getTiffFile") {
-            console.log("TiffOne-getTiffFile message received")
-
+            // TODO: clean up this mess :) (works, but not nice)
+            // If the Tiff content is CORS or a file, the background has to fetch it
+            // (Starting from Chrome 80)
             let xhrPromise = new Promise(function (resolve, reject) {
+                const tifFileRegex = new RegExp("^(file:(\\/{3}|\\/{2}))(\\w*)(.*)(\\.(tiff|tif))$", "i");
+                const isRegexMatch = tifFileRegex.test(request.message);
+                if (!isRegexMatch) {
+                    // console.log(`${isRegexMatch}  -  ${request.message}`);
+                    reject({
+                        status: this.status,
+                        statusText: "BLOCKED: invalid file path"
+                    });
+                }
 
                 let xhr = new XMLHttpRequest();
                 xhr.responseType = 'arraybuffer';
@@ -118,7 +130,8 @@ function addMessageListeners() {
             });
 
             xhrPromise.then(function(tiffArrayBuffer) {
-                let blob = new Blob([ tiffArrayBuffer ], { type: 'arraybuffer' })
+                // blob is needed to
+                let blob = new Blob([ tiffArrayBuffer ], { type: 'arraybuffer' });
                 sendResponse(URL.createObjectURL(blob));
             });
 

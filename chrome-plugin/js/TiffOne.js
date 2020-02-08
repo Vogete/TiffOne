@@ -142,20 +142,17 @@ class TiffOne {
     async getTiff(url) {
         return new Promise(function (resolve, reject) {
 
-            const regex = "file:\\/\\/.*";
-            const regexMatch = url.match(regex);
-            const isFile = (url == regexMatch[0])
+            const tifFileRegex = new RegExp("^(file:(\\/{3}|\\/{2}))(\\w*)(.*)(\\.(tiff|tif))$", "i");
+            const isRegexMatch = tifFileRegex.test(url);
+            // console.log(`${isRegexMatch}  -  ${url}`);
+            // const isFile = (url == regexMatch[0]);
 
-            if (isFile) {
+            // TODO cleanup this mess :)
+            if (isRegexMatch) {
                 chrome.runtime.sendMessage({
                     type: "TiffOne-getTiffFile",
                     message: url
                 }, function (response) {
-
-                    console.log("response from background");
-                    console.log(response);
-
-                    // let tiff = new Tiff({ buffer: response });
 
                     let xhr = new XMLHttpRequest();
                     xhr.responseType = 'arraybuffer';
@@ -172,12 +169,11 @@ class TiffOne {
                     };
                     xhr.send(null);
 
-                    resolve(tiff);
                 });
             } else {
                 let xhr = new XMLHttpRequest();
                 xhr.responseType = 'arraybuffer';
-                xhr.open("GET", response, true);
+                xhr.open("GET", url, true);
                 xhr.onload = function (e) {
                     let tiff = new Tiff({ buffer: xhr.response });
                     resolve(tiff);
@@ -189,7 +185,6 @@ class TiffOne {
                     });
                 };
                 xhr.send(null);
-                resolve(tiff);
             }
 
         });

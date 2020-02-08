@@ -67,7 +67,6 @@ function createMutationObserver(domObject) {
                         message: "Iframe loaded"
                     }
                 }, function(response) {
-                    console.log(response)
                 });
                 // console.log("iframe loaded");
                 // runTiffOneOnDocumentObject(iframeElement.contentWindow.document)
