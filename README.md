@@ -1,10 +1,9 @@
 # TiffOne
 
-A small browser extension that displays TIFF (*.tiff) files (especially [AlternaTIFF](http://www.alternatiff.com/) objects) with support for multi-page TIFF files.
+TiffOne is a browser extension that lets you view TIFF images in your browser. It scans the page, looking for images that have a "tiff" or "tif" extension, and converts those images into HTML canvases, which can then be displayed by modern browsers. TiffOne supports the multi-page functionality of TIFF images, which can be accessed by the header menu right above the displayed image. The extension provides a full screen functinality, and a print option for easy viewing and saving of the images. The extension can be turned off when not needed from the popup menu of the browser icon.
 
-This project started as a replacement for [AlternaTIFF](http://www.alternatiff.com/), which is an ActiveX extension that has been removed from modern browsers, and only works in Internet Explorer, which is also obsolete at this point. However, lots of corporate environments still use AlternaTIFF, forcing users to use IE. TiffOne is the solution to this problem, with a similar UI to AlternaTIFF, but working in Google Chrome. This extension is an early version, so not every feature is present from AlternaTIFF.
+TiffOne currently supports all Chromium based browsers, but it has only been tested on Google Chrome and Chromium based Microsoft Edge.
 
-TiffOne uses [tiff.js](https://github.com/seikichi/tiff.js) for converting TIFF files to HTML canvases.
-All images are displayed inline, at their original size, but with a small header added for page navigation, and other functions.
+The extension uses [tiff.js](https://github.com/seikichi/tiff.js) for converting TIFF files to HTML canvases.
 
-This is a one-man project so far, so anyone is more than welcome to contribute to this tool in any way!
+Any issues can be submitted at [https://github.com/Vogete/TiffOne/issues](https://github.com/Vogete/TiffOne/issues).
