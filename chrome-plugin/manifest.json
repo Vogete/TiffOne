@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "TiffOne",
     "version": "0.3.1",
     "description": "View embedded TIFF files and AlternaTIFF objects directly in your browser.",
@@ -11,25 +11,26 @@
         "48": "assets/TiffOne_logo_48px.png",
         "128": "assets/TiffOne_logo_128px.png"
     },
-    "web_accessible_resources": [
-        "templates/*",
-        "fonts/*",
-        "css/printing.css"
-    ],
+    "web_accessible_resources": [{
+        "resources": [
+            "templates/*",
+            "fonts/*",
+            "css/printing.css"
+        ],
+        "extension_ids": ["mhdcjcilknaincbghadamlbdfgnpcebg","beogakncemiochcinmcidmdnnbedieak"]
+    }],
     "permissions": [
         "*://*/*",
         "file://*/*",
-        "storage"
+        "storage",
+        "scripting",
+        "activeTab"
     ],
-    "browser_action": {
+    "action": {
         "default_title": "TIffOne",
         "default_popup": "html/popup.html"
     },
     "background": {
-        "scripts": [
-            "js/helper.js",
-            "js/background.js"
-        ],
-        "persistent": false
+        "service_worker": "js/bg-loader.js"
     }
 }

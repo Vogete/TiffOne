@@ -18,14 +18,18 @@ async function loadChrome() {
                 return;
             }
 
-            chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+            chrome.scripting.insertCSS({target: {tabId: tabId}, files:["css/variables.css"]});
+            chrome.scripting.insertCSS({target: {tabId: tabId}, files:["css/styles-fullscreen.css"]});
+            chrome.scripting.insertCSS({target: {tabId: tabId}, files:["css/styles.css"]});
+            chrome.scripting.insertCSS({target: {tabId: tabId}, files:["css/font-awesome.min.css"]});
 
-            chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
-            chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
-            chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
+            // chrome.scripting.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
+            // chrome.scripting.insertCSS({file:"css/styles.css", allFrames: true});
+            // chrome.scripting.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+
+            chrome.scripting.executeScript({file: "libs/tiff.min.js", allFrames: true});
+            chrome.scripting.executeScript({file: "js/TiffOne.js", allFrames: true});
+            chrome.scripting.executeScript({file: "js/main.js", allFrames: true});
 
             addMessageListeners();
         }
@@ -37,16 +41,12 @@ async function loadFirefox() {
     // TODO: load scripts and CSS for firefox
 }
 
-
+/*
 // Opera 8.0+ (tested on Opera 42.0)
 let isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 
 // Firefox 1.0+ (tested on Firefox 45 - 53)
 let isFirefox = typeof InstallTrigger !== 'undefined';
-
-// Internet Explorer 6-11
-//   Untested on IE (of course). Here because it shows some logic for isEdge.
-let isIE = /*@cc_on!@*/false || !!document.documentMode;
 
 // Edge 20+ (tested on Edge 38.14393.0.0)
 let isEdge = !isIE && !!window.StyleMedia;
@@ -62,7 +62,7 @@ let isChrome = !isOpera && !isFirefox && !isIE && !isEdge;
 // Blink engine detection (tested on Chrome 55.0.2883.87 and Opera 42.0)
 let isBlink = (isChrome || isOpera) && !!window.CSS;
 
-/* The above code is based on code from: https://stackoverflow.com/a/9851769/3773011 */
+// The above code is based on code from: https://stackoverflow.com/a/9851769/3773011 //
 //Verification:
 // let log = console.log;
 // if(isEdge) log = alert; //Edge console.log() does not work, but alert() does.
@@ -79,6 +79,10 @@ if (isBlink) {
 } else if (isFirefox) {
     loadFirefox();
 }
+*/
+
+// had to take out the browser detection script because of Chrome Extension Manifest V3
+loadChrome();
 
 function addMessageListeners() {
 
@@ -87,14 +91,16 @@ function addMessageListeners() {
         // Needed for iframe load to inject the contents into all iframes
         // TODO: clean up code so it only injects into new iframes that has no TiffOne yet
         if (request.type == "TiffOne-Iframe-load"){
-            chrome.tabs.insertCSS({file:"css/variables.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/styles.css", allFrames: true});
-            chrome.tabs.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
 
-            chrome.tabs.executeScript({file: "libs/tiff.min.js", allFrames: true});
-            chrome.tabs.executeScript({file: "js/TiffOne.js", allFrames: true});
-            chrome.tabs.executeScript({file: "js/main.js", allFrames: true});
+            // TODO: rewrite for manifest v3
+            chrome.scripting.insertCSS({file:"css/variables.css", allFrames: true});
+            chrome.scripting.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
+            chrome.scripting.insertCSS({file:"css/styles.css", allFrames: true});
+            chrome.scripting.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
+
+            chrome.scripting.executeScript({file: "libs/tiff.min.js", allFrames: true});
+            chrome.scripting.executeScript({file: "js/TiffOne.js", allFrames: true});
+            chrome.scripting.executeScript({file: "js/main.js", allFrames: true});
             sendResponse(true);
         }
 
