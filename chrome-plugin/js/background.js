@@ -27,9 +27,9 @@ async function loadChrome() {
             // chrome.scripting.insertCSS({file:"css/styles.css", allFrames: true});
             // chrome.scripting.insertCSS({file:"css/font-awesome.min.css", allFrames: true});
 
-            chrome.scripting.executeScript({file: "libs/tiff.min.js", allFrames: true});
-            chrome.scripting.executeScript({file: "js/TiffOne.js", allFrames: true});
-            chrome.scripting.executeScript({file: "js/main.js", allFrames: true});
+            chrome.scripting.executeScript({target: {tabId: tabId}, files:["libs/tiff.min.js"]});
+            chrome.scripting.executeScript({target: {tabId: tabId}, files:["js/TiffOne.js"]});
+            chrome.scripting.executeScript({target: {tabId: tabId}, files:["js/main.js"]});
 
             addMessageListeners();
         }
@@ -92,7 +92,6 @@ function addMessageListeners() {
         // TODO: clean up code so it only injects into new iframes that has no TiffOne yet
         if (request.type == "TiffOne-Iframe-load"){
 
-            // TODO: rewrite for manifest v3
             chrome.scripting.insertCSS({file:"css/variables.css", allFrames: true});
             chrome.scripting.insertCSS({file:"css/styles-fullscreen.css", allFrames: true});
             chrome.scripting.insertCSS({file:"css/styles.css", allFrames: true});
@@ -108,6 +107,17 @@ function addMessageListeners() {
             // TODO: clean up this mess :) (works, but not nice)
             // If the Tiff content is CORS or a file, the background has to fetch it
             // (Starting from Chrome 80)
+
+
+            // TODO: Needs to be implemented properly, but fetch() does not work yet with files.
+            // https://groups.google.com/a/chromium.org/g/chromium-extensions/c/U6TpTj6C7ac
+            fetch(request.message)
+                .then(response => console.log(response))
+                .catch(errorr => console.error(errorr))
+
+            // TODO: This whole XMLHttpRequest (native JS AJAX calls) needs to be replaced with fetch()
+            // But currently fetch does not allow file:// loading. which is annoying.
+            // https://developer.chrome.com/docs/extensions/mv3/xhr/
             let xhrPromise = new Promise(function (resolve, reject) {
                 const tifFileRegex = new RegExp("^(file:(\\/{3}|\\/{2}))(\\w*)(.*)(\\.(tiff|tif))$", "i");
                 const isRegexMatch = tifFileRegex.test(request.message);

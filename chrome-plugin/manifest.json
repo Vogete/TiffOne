@@ -15,16 +15,19 @@
         "resources": [
             "templates/*",
             "fonts/*",
-            "css/printing.css"
+            "css/printing.css",
+            "libs/*"
         ],
-        "extension_ids": ["mhdcjcilknaincbghadamlbdfgnpcebg","beogakncemiochcinmcidmdnnbedieak"]
+        "extension_ids": ["mhdcjcilknaincbghadamlbdfgnpcebg","beogakncemiochcinmcidmdnnbedieak", "ckmapdnkpfmfficlgeknjhblkmdakgik"]
     }],
     "permissions": [
-        "*://*/*",
-        "file://*/*",
         "storage",
         "scripting",
         "activeTab"
+    ],
+    "host_permissions": [
+        "*://*/*",
+        "file://*/*"
     ],
     "action": {
         "default_title": "TIffOne",

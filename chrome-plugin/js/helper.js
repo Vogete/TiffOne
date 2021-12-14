@@ -24,5 +24,5 @@ function setBrowserIcon(iconName) {
     const iconPath = `../assets/${iconName}`;
 
     // TODO: make it cross platform
-    chrome.browserAction.setIcon({path: iconPath});
+    chrome.action.setIcon({path: iconPath});
 }
